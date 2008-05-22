@@ -1,0 +1,15 @@
+Source: libglib-ex-objectbits-perl
+Section: perl
+Priority: optional
+Build-Depends: cdbs, debhelper (>= 4)
+Maintainer: Kevin Ryde <user42@zip.com.au>
+Standards-Version: 3.7.3
+Homepage: http://www.geocities.com/user42_kevin/glib-ex-objectbits/index.html
+Bugs: mailto:user42@zip.com.au
+
+Package: libglib-ex-objectbits-perl
+Architecture: all
+Depends: libglib-perl
+Description: Glib::Object helper bits
+ A couple of object-oriented helpers for Glib::Object signal freezing
+ and signal ID disconnection.

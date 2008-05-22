@@ -1,0 +1,98 @@
+#!/usr/bin/perl
+
+# Copyright 2007, 2008 Kevin Ryde
+
+# This file is part of Glib-Ex-ObjectBits.
+#
+# Glib-Ex-ObjectBits is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as published
+# by the Free Software Foundation; either version 2, or (at your option) any
+# later version.
+#
+# Glib-Ex-ObjectBits is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+# Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
+
+use strict;
+use warnings;
+use ExtUtils::MakeMaker;
+
+WriteMakefile
+  (NAME         => 'Glib-Ex-ObjectBits',
+   ABSTRACT     => 'Mouse pointer cursor management for Gtk widgets.',
+   VERSION      => 1,
+   AUTHOR       => 'Kevin Ryde <user42@zip.com.au>',
+   LICENSE      => 'gpl',
+   SIGN         => 1,
+
+   PREREQ_PM    => {
+                    # any version should be ok
+                    'Glib' => 0,
+
+                    # actually Glib-Perl requires perl 5.8, which has
+                    # Scalar::Util builtin already
+                    'Scalar::Util' => 0,
+                   },
+
+   clean        => { FILES => 'FreezeNotify.html SignalIds.html' },
+  );
+
+sub MY::postamble {
+  return <<'MAKE_FRAG';
+
+lint:
+	perl -MO=Lint lib/Glib/Ex/FreezeNotify.pm lib/Glib/Ex/SignalIds.pm
+	podchecker    lib/Glib/Ex/FreezeNotify.pm lib/Glib/Ex/SignalIds.pm
+
+myman:
+	mv MANIFEST MANIFEST.old
+	touch SIGNATURE
+	(make manifest 2>&1; diff -u MANIFEST.old MANIFEST) |less
+
+FreezeNotify.html: lib/Glib/Ex/FreezeNotify.pm Makefile
+	-perl -MPod::Simple::HTML -e Pod::Simple::HTML::go \
+	  lib/Glib/Ex/FreezeNotify.pm \
+	| sed 's!http://search.cpan.org/perldoc?Glib%3A%3A\([^"]*\)!http://gtk2-perl.sourceforge.net/doc/pod/Glib/\1.html!' \
+	  >FreezeNotify.html
+SignalIds.html: lib/Glib/Ex/SignalIds.pm Makefile
+	-perl -MPod::Simple::HTML -e Pod::Simple::HTML::go \
+	  lib/Glib/Ex/SignalIds.pm \
+	| sed 's!http://search.cpan.org/perldoc?Glib%3A%3A\([^"]*\)!http://gtk2-perl.sourceforge.net/doc/pod/Glib/\1.html!' \
+	  >SignalIds.html
+
+# find files in the dist with mod times this year, but without this year in
+# the copyright line
+copyright-years-check: Glib-Ex-ObjectBits-$(VERSION).tar.gz
+	year=`date +%Y`; \
+	tar tvfz Glib-Ex-ObjectBits-$(VERSION).tar.gz \
+	| grep $$year- \
+	| sed 's:^.*Glib-Ex-ObjectBits-$(VERSION)/::' \
+	| (result=0; \
+	  while read i; do \
+	    case $$i in \
+	      '' | */ \
+	      | debian/changelog | debian/compat | debian/control \
+	      | t/pod.t \
+	      | COPYING | MANIFEST | SIGNATURE | META.yml) \
+	      continue ;; \
+	    esac; \
+	    if test -e "$(srcdir)/$$i"; then f="$(srcdir)/$$i"; \
+	    else f="$$i"; fi; \
+	    if ! grep -q "Copyright.*$$year" $$f; then \
+	      echo "$$i:1: this file"; \
+	      grep Copyright $$f; \
+	      result=1; \
+	    fi; \
+	  done; \
+	  exit $$result)
+
+debug-constants-check:
+	if egrep -n 'DEBUG => [^0]' $(TO_INST_PM); then exit 1; else exit 0; fi
+
+
+MAKE_FRAG
+}
