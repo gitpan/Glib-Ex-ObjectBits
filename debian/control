@@ -1,9 +1,26 @@
+# Copyright 2008 Kevin Ryde
+
+# This file is part of Glib-Ex-ObjectBits.
+#
+# Glib-Ex-ObjectBits is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as published
+# by the Free Software Foundation; either version 2, or (at your option) any
+# later version.
+#
+# Glib-Ex-ObjectBits is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+# Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
+
 Source: libglib-ex-objectbits-perl
 Section: perl
 Priority: optional
 Build-Depends: cdbs, debhelper (>= 4)
 Maintainer: Kevin Ryde <user42@zip.com.au>
-Standards-Version: 3.7.3
+Standards-Version: 3.8.0
 Homepage: http://www.geocities.com/user42_kevin/glib-ex-objectbits/index.html
 Bugs: mailto:user42@zip.com.au
 
@@ -12,4 +29,4 @@ Architecture: all
 Depends: libglib-perl
 Description: Glib::Object helper bits
  A couple of object-oriented helpers for Glib::Object signal freezing
- and signal ID disconnection.
+ and source ID and signal ID disconnection.

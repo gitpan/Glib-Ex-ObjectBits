@@ -23,8 +23,8 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile
   (NAME         => 'Glib-Ex-ObjectBits',
-   ABSTRACT     => 'Mouse pointer cursor management for Gtk widgets.',
-   VERSION      => 1,
+   ABSTRACT     => 'Helpers for Glib objects.',
+   VERSION      => 2,
    AUTHOR       => 'Kevin Ryde <user42@zip.com.au>',
    LICENSE      => 'gpl',
    SIGN         => 1,
@@ -38,7 +38,7 @@ WriteMakefile
                     'Scalar::Util' => 0,
                    },
 
-   clean        => { FILES => 'FreezeNotify.html SignalIds.html' },
+   clean        => { FILES => 'FreezeNotify.html SignalIds.html SourceIds.html' },
   );
 
 sub MY::postamble {
@@ -58,15 +58,22 @@ FreezeNotify.html: lib/Glib/Ex/FreezeNotify.pm Makefile
 	  lib/Glib/Ex/FreezeNotify.pm \
 	| sed 's!http://search.cpan.org/perldoc?Glib%3A%3A\([^"]*\)!http://gtk2-perl.sourceforge.net/doc/pod/Glib/\1.html!' \
 	  >FreezeNotify.html
+
 SignalIds.html: lib/Glib/Ex/SignalIds.pm Makefile
 	-perl -MPod::Simple::HTML -e Pod::Simple::HTML::go \
 	  lib/Glib/Ex/SignalIds.pm \
 	| sed 's!http://search.cpan.org/perldoc?Glib%3A%3A\([^"]*\)!http://gtk2-perl.sourceforge.net/doc/pod/Glib/\1.html!' \
 	  >SignalIds.html
 
+SourceIds.html: lib/Glib/Ex/SourceIds.pm Makefile
+	-perl -MPod::Simple::HTML -e Pod::Simple::HTML::go \
+	  lib/Glib/Ex/SourceIds.pm \
+	| sed 's!http://search.cpan.org/perldoc?Glib%3A%3A\([^"]*\)!http://gtk2-perl.sourceforge.net/doc/pod/Glib/\1.html!' \
+	  >SourceIds.html
+
 # find files in the dist with mod times this year, but without this year in
 # the copyright line
-copyright-years-check: Glib-Ex-ObjectBits-$(VERSION).tar.gz
+copyright-years-check:
 	year=`date +%Y`; \
 	tar tvfz Glib-Ex-ObjectBits-$(VERSION).tar.gz \
 	| grep $$year- \
@@ -77,7 +84,7 @@ copyright-years-check: Glib-Ex-ObjectBits-$(VERSION).tar.gz
 	      '' | */ \
 	      | debian/changelog | debian/compat | debian/control \
 	      | t/pod.t \
-	      | COPYING | MANIFEST | SIGNATURE | META.yml) \
+	      | COPYING | MANIFEST* | SIGNATURE | META.yml) \
 	      continue ;; \
 	    esac; \
 	    if test -e "$(srcdir)/$$i"; then f="$(srcdir)/$$i"; \
@@ -93,6 +100,17 @@ copyright-years-check: Glib-Ex-ObjectBits-$(VERSION).tar.gz
 debug-constants-check:
 	if egrep -n 'DEBUG => [^0]' $(TO_INST_PM); then exit 1; else exit 0; fi
 
+
+diff-prev:
+	rm -rf diff.tmp
+	mkdir diff.tmp
+	cd diff.tmp \
+	&& tar xfz ../$(NAME)-`expr $(VERSION) - 1`.tar.gz \
+	&& tar xfz ../$(NAME)-$(VERSION).tar.gz
+	-cd diff.tmp; diff -ur $(NAME)-`expr $(VERSION) - 1` \
+	                       $(NAME)-$(VERSION) >tree.diff
+	-less diff.tmp/tree.diff
+	rm -rf diff.tmp
 
 MAKE_FRAG
 }

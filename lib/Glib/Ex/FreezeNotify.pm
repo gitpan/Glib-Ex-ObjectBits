@@ -22,7 +22,7 @@ use Carp;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 1;
+our $VERSION = 2;
 
 # set this to 1 for some diagnostic prints
 use constant DEBUG => 0;
@@ -84,28 +84,28 @@ C<Glib::Object>s, with an automatic corresponding C<thaw_notify> at the end
 of the block, no matter how it's exited, whether a C<goto>, early C<return>,
 C<die>, etc.
 
-Protection against an error throw leaving the object permanently frozen is
-the biggest advantage.  Errors are thrown for a bad property name in a
-C<set>, or in all the usual ways if calculating a value (but as of Glib-Perl
-1.181 bad value types generally only provoke warnings).
+The main advantage is protection against an error throw leaving the object
+permanently frozen.  Errors can be thrown for a bad property name in a
+C<set>, or all the usual ways if calculating a value.  (Though as of
+Glib-Perl 1.181 bad value types as such generally only provoke warnings.)
 
 FreezeNotify works by having C<thaw_notify> in the destroy code of a
 FreezeNotify object.  General purpose cleanups in this destructor style can
 be done with C<Scope::Guard> or C<Sub::ScopeFinalizer>.  FreezeNotify is
 specific to C<Glib::Object> freeze/thaw.
 
-FreezeNotify holds only weak references to its objects, so the mere fact
-they're due for later thawing doesn't keep them alive if nothing else cares
-whether they live or die.  The only real effect of this is that frozen
-objects can be garbage collected within the freeze block, instead of having
-their life extended to the end of it.
+FreezeNotify only holds weak references to its objects, so the mere fact
+they're due for later thawing doesn't keep them alive when nothing else
+cares if they live or die.  The only real effect of this is that frozen
+objects can be garbage collected within the freeze block, instead their life
+extended to the end of it.
 
 It works to nest freeze/thaws, done either with FreezeNotify or with
-explicit C<freeze_notify> calls.  Because GObject simply counts outstanding
-freezes there's no need for true nesting; multiple freezes can overlap in
-any fashion.  If you're freezing for an extended span then a FreezeNotify
-object is a good way not to lose track of your thaws, but anything except a
-short freeze for a handful of C<set()> calls is probably unusual.
+explicit C<freeze_notify> calls.  C<Glib::Object> simply counts outstanding
+freezes so they don't have to nest; multiple freezes can overlap in any
+fashion.  If you're freezing for an extended time then a FreezeNotify object
+is a good way not to lose track of your thaws, though anything except a
+short freeze over a handful of C<set()> calls is probably unusual.
 
 =head1 FUNCTIONS
 
@@ -141,7 +141,7 @@ L<http://www.geocities.com/user42_kevin/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 
-Copyright 2007, 2008 Kevin Ryde
+Copyright 2008 Kevin Ryde
 
 Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by the

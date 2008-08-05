@@ -1,0 +1,76 @@
+# Copyright 2008 Kevin Ryde
+
+# This file is part of Glib-Ex-ObjectBits.
+#
+# Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 3, or (at your option) any later
+# version.
+#
+# Glib-Ex-ObjectBits is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
+
+
+use strict;
+use warnings;
+use Glib::Ex::SourceIds;
+use Test::More tests => 9;
+
+ok ($Glib::Ex::SourceIds::VERSION >= 2);
+ok (Glib::Ex::SourceIds->VERSION >= 2);
+
+sub do_idle {
+  print "idle\n";
+  return 0; # uninstall
+}
+
+# the SourceIds object gets garbage collected when weakened
+{
+  my $id = Glib::Idle->add (\&do_idle);
+  my $ids = Glib::Ex::SourceIds->new ($id);
+  require Scalar::Util;
+  Scalar::Util::weaken ($ids);
+  is ($ids, undef,
+      'destroyed when weakened');
+  ok (! Glib::Source->remove ($id),
+      'held source disconnected by destroy');
+}
+
+# two held IDs disconnected
+{
+  my $id1 = Glib::Idle->add (\&do_idle);
+  my $id2 = Glib::Idle->add (\&do_idle);
+  my $ids = Glib::Ex::SourceIds->new ($id1, $id2);
+  require Scalar::Util;
+  Scalar::Util::weaken ($ids);
+  is ($ids, undef,
+      'destroyed when weakened');
+  ok (! Glib::Source->remove ($id1),
+      'id1 disconnected by destroy');
+  ok (! Glib::Source->remove ($id2),
+      'id2 disconnected by destroy');
+}
+
+# SourceIds can cope if held ID is disconnected elsewhere
+{
+  my $id = Glib::Idle->add (\&do_idle);
+  my $ids = Glib::Ex::SourceIds->new ($id);
+  ok (Glib::Source->remove ($id));
+  $ids = undef;
+}
+
+# explicit early remove
+{
+  my $id = Glib::Idle->add (\&do_idle);
+  my $ids = Glib::Ex::SourceIds->new ($id);
+  $ids->remove;
+  ok (! Glib::Source->remove ($id));
+}
+
+exit 0;
+

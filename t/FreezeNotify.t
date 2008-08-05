@@ -17,10 +17,11 @@
 
 use strict;
 use warnings;
-use Test::More tests => 17;
+use Test::More tests => 18;
 use Glib::Ex::FreezeNotify;
 
-ok ($Glib::Ex::FreezeNotify::VERSION >= 1);
+ok ($Glib::Ex::FreezeNotify::VERSION >= 2);
+ok (Glib::Ex::FreezeNotify->VERSION >= 2);
 
 package Foo;
 use strict;

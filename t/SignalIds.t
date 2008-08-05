@@ -1,5 +1,3 @@
-# Glib::Ex::SignalIds tests.
-
 # Copyright 2008 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
@@ -20,8 +18,12 @@
 
 use strict;
 use warnings;
-use Test::More tests => 11;
 use Glib::Ex::SignalIds;
+use Test::More tests => 13;
+
+ok ($Glib::Ex::SignalIds::VERSION >= 2);
+ok (Glib::Ex::SignalIds->VERSION >= 2);
+
 
 package MyClass;
 use strict;
@@ -35,7 +37,6 @@ use Glib::Object::Subclass
                    'Blurb',
                    0, 100, 50,
                    Glib::G_PARAM_READWRITE) ];
-
 package main;
 
 # the SignalIds object gets garbage collected when weakened
@@ -45,8 +46,7 @@ package main;
     ($obj, $obj->signal_connect (notify => sub {}));
   require Scalar::Util;
   Scalar::Util::weaken ($sigs);
-  is (defined $sigs ? 'defined' : 'not defined',
-      'not defined');
+  is ($sigs, undef);
 }
 
 # the target object gets garbage collected when weakened
@@ -56,8 +56,7 @@ package main;
     ($obj, $obj->signal_connect (notify => sub {}));
   require Scalar::Util;
   Scalar::Util::weaken ($obj);
-  is (defined $obj ? 'defined' : 'not defined',
-      'not defined',
+  is ($obj, undef,
       'target object garbage collected when weakened');
 }
 
@@ -125,4 +124,3 @@ ok ($@, 'notice wrong blessed as first arg');
 
 
 exit 0;
-

@@ -22,7 +22,7 @@ use Carp;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 1;
+our $VERSION = 2;
 
 sub new {
   my $class = shift;
@@ -87,7 +87,7 @@ object they're on.  When the SignalIds is destroyed it disconnects those
 IDs.
 
 This is designed to make life easier when putting connections on "external"
-objects which you should cleanup either with your own object destruction or
+objects which you should cleanup either in your own object destruction or
 when switching to a different target.  Typical uses are a viewer widget
 holding signals on a TreeModel, or a scrolled widget on Adjustments.
 
@@ -99,11 +99,11 @@ this weakening means a SignalIds object can be kept in the instance data of
 the target object itself without creating a circular reference.
 
 If the target object is destroyed then all its signals are disconnected
-automatically.  SignalIds knows no further action is needed in that case.
-SignalIds also knows some combinations of weakening and Perl's "global
-destruction" stage can give slightly odd situations where the target object
-has disconnected all signals but Perl hasn't yet zapped references to it.
-SignalIds therefore checks whether its IDs are still connected before
+automatically.  SignalIds knows no explicit disconnects are needed in that
+case.  SignalIds also knows some combinations of weakening and Perl's
+"global destruction" stage can give slightly odd situations where the target
+object has disconnected all signals but Perl hasn't yet zapped references to
+it.  SignalIds therefore checks whether its IDs are still connected before
 disconnecting, to avoid warnings from Glib.
 
 =head1 FUNCTIONS
@@ -147,7 +147,7 @@ L<http://www.geocities.com/user42_kevin/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 
-Copyright 2007, 2008 Kevin Ryde
+Copyright 2008 Kevin Ryde
 
 Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by the

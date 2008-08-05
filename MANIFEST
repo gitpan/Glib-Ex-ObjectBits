@@ -1,3 +1,4 @@
+Changes
 COPYING
 debian/changelog
 debian/compat
@@ -7,11 +8,14 @@ debian/rules
 debian/watch
 lib/Glib/Ex/FreezeNotify.pm
 lib/Glib/Ex/SignalIds.pm
+lib/Glib/Ex/SourceIds.pm
 Makefile.PL
 MANIFEST			This list of files
+MANIFEST.SKIP
 README
 SIGNATURE
 t/FreezeNotify.t
 t/pod.t
 t/SignalIds.t
+t/SourceIds.t
 META.yml                                 Module meta-data (added by MakeMaker)

@@ -25,6 +25,9 @@ This is a couple of helpers for working with Glib::Objects.
 * Glib::Ex::SignalIds holds a set of signal IDs and disconnects them
   when destroyed.
 
+* Glib::Ex::SourceIds holds a set of main loop source IDs and
+  disconnects them when destroyed.
+
 The common theme is that it can be a good deal easier to manage the
 lifespan of a helper object than to catch all the places your code
 jumps out or might drop its IDs etc.
