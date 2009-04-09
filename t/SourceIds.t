@@ -1,4 +1,6 @@
-# Copyright 2008 Kevin Ryde
+#!/usr/bin/perl
+
+# Copyright 2008, 2009 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -19,14 +21,41 @@
 use strict;
 use warnings;
 use Glib::Ex::SourceIds;
-use Test::More tests => 9;
+use Test::More tests => 14;
 
-ok ($Glib::Ex::SourceIds::VERSION >= 2);
-ok (Glib::Ex::SourceIds->VERSION >= 2);
+use Glib;
+diag ("Perl-Glib version ",Glib->VERSION);
+diag ("Compiled against Glib version ",
+      Glib::MAJOR_VERSION(), ".",
+      Glib::MINOR_VERSION(), ".",
+      Glib::MICRO_VERSION(), ".");
+diag ("Running on       Glib version ",
+      Glib::major_version(), ".",
+      Glib::minor_version(), ".",
+      Glib::micro_version(), ".");
 
 sub do_idle {
-  print "idle\n";
+  diag "idle";
   return 0; # uninstall
+}
+
+# version number
+{
+  my $want_version = 3;
+  ok ($Glib::Ex::SourceIds::VERSION >= $want_version, 'VERSION variable');
+  ok (Glib::Ex::SourceIds->VERSION  >= $want_version, 'VERSION class method');
+  ok (eval { Glib::Ex::SourceIds->VERSION($want_version); 1 },
+      "VERSION class check $want_version");
+  ok (! eval { Glib::Ex::SourceIds->VERSION($want_version + 1000); 1 },
+      "VERSION class check " . ($want_version + 1000));
+
+  my $ids = Glib::Ex::SourceIds->new (Glib::Idle->add (\&do_idle));
+
+  ok ($ids->VERSION >= $want_version, 'VERSION object method');
+  ok (eval { $ids->VERSION($want_version); 1 },
+      "VERSION object check $want_version");
+  ok (! eval { $ids->VERSION($want_version + 1000); 1 },
+      "VERSION object check " . ($want_version + 1000));
 }
 
 # the SourceIds object gets garbage collected when weakened
@@ -60,7 +89,7 @@ sub do_idle {
 {
   my $id = Glib::Idle->add (\&do_idle);
   my $ids = Glib::Ex::SourceIds->new ($id);
-  ok (Glib::Source->remove ($id));
+  ok (Glib::Source->remove ($id), 'early remove');
   $ids = undef;
 }
 
@@ -69,7 +98,8 @@ sub do_idle {
   my $id = Glib::Idle->add (\&do_idle);
   my $ids = Glib::Ex::SourceIds->new ($id);
   $ids->remove;
-  ok (! Glib::Source->remove ($id));
+  ok (! Glib::Source->remove ($id),
+      'early remove, already done');
 }
 
 exit 0;

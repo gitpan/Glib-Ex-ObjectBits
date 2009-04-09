@@ -1,4 +1,6 @@
-# Copyright 2008 Kevin Ryde
+#!/usr/bin/perl
+
+# Copyright 2008, 2009 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -19,25 +21,39 @@
 use strict;
 use warnings;
 use Glib::Ex::SignalIds;
-use Test::More tests => 13;
+use Test::More tests => 18;
 
-ok ($Glib::Ex::SignalIds::VERSION >= 2);
-ok (Glib::Ex::SignalIds->VERSION >= 2);
-
-
-package MyClass;
-use strict;
-use warnings;
 use Glib;
-use Glib::Object::Subclass
-  Glib::Object::,
-  properties => [ Glib::ParamSpec->int
-                  ('myprop',
-                   'myprop',
-                   'Blurb',
-                   0, 100, 50,
-                   Glib::G_PARAM_READWRITE) ];
-package main;
+diag ("Perl-Glib version ",Glib->VERSION);
+diag ("Compiled against Glib version ",
+      Glib::MAJOR_VERSION(), ".",
+      Glib::MINOR_VERSION(), ".",
+      Glib::MICRO_VERSION(), ".");
+diag ("Running on       Glib version ",
+      Glib::major_version(), ".",
+      Glib::minor_version(), ".",
+      Glib::micro_version(), ".");
+
+# version number
+{
+  my $want_version = 3;
+  ok ($Glib::Ex::SignalIds::VERSION >= $want_version, 'VERSION variable');
+  ok (Glib::Ex::SignalIds->VERSION  >= $want_version, 'VERSION class method');
+  ok (eval { Glib::Ex::SignalIds->VERSION($want_version); 1 },
+      "VERSION class check $want_version");
+  ok (! eval { Glib::Ex::SignalIds->VERSION($want_version + 1000); 1 },
+      "VERSION class check " . ($want_version + 1000));
+
+  my $obj = MyClass->new;
+  my $sigs = Glib::Ex::SignalIds->new
+    ($obj, $obj->signal_connect (notify => sub {}));
+
+  ok ($sigs->VERSION >= $want_version, 'VERSION object method');
+  ok (eval { $sigs->VERSION($want_version); 1 },
+      "VERSION object check $want_version");
+  ok (! eval { $sigs->VERSION($want_version + 1000); 1 },
+      "VERSION object check " . ($want_version + 1000));
+}
 
 # the SignalIds object gets garbage collected when weakened
 {
@@ -105,12 +121,23 @@ package main;
 
 # SignalIds can cope if held signal is disconnected elsewhere
 {
+  diag "when id disconnected from elsewhere";
   my $obj = MyClass->new;
   my $id = $obj->signal_connect (notify => sub { });
   my $sigs = Glib::Ex::SignalIds->new ($obj, $id);
 
   $obj->signal_handler_disconnect ($id);
-  $sigs = undef;
+  $sigs->disconnect;
+}
+
+# SignalIds can cope with 0 return from unknown signal name
+{
+  diag "when id==0 from unknown signal name";
+  my $obj = MyClass->new;
+  my $id = 0;
+  my $sigs = Glib::Ex::SignalIds->new ($obj, $id);
+  diag explain $sigs;
+  $sigs->disconnect;
 }
 
 eval { Glib::Ex::SignalIds->new (123); };
@@ -124,3 +151,19 @@ ok ($@, 'notice wrong blessed as first arg');
 
 
 exit 0;
+
+
+package MyClass;
+use strict;
+use warnings;
+use Glib;
+use Glib::Object::Subclass
+  Glib::Object::,
+  properties => [ Glib::ParamSpec->int
+                  ('myprop',
+                   'myprop',
+                   'Blurb',
+                   0, 100, 50,
+                   Glib::G_PARAM_READWRITE) ];
+
+__END__

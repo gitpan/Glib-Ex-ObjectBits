@@ -1,12 +1,12 @@
 #!/usr/bin/perl
 
-# Copyright 2007, 2008 Kevin Ryde
+# Copyright 2007, 2008, 2009 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
 # Glib-Ex-ObjectBits is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as published
-# by the Free Software Foundation; either version 2, or (at your option) any
+# by the Free Software Foundation; either version 3, or (at your option) any
 # later version.
 #
 # Glib-Ex-ObjectBits is distributed in the hope that it will be useful,
@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
 
+use 5.008;
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
@@ -24,7 +25,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile
   (NAME         => 'Glib-Ex-ObjectBits',
    ABSTRACT     => 'Helpers for Glib objects.',
-   VERSION      => 2,
+   VERSION_FROM => 'lib/Glib/Ex/SignalIds.pm',
    AUTHOR       => 'Kevin Ryde <user42@zip.com.au>',
    LICENSE      => 'gpl',
    SIGN         => 1,
@@ -32,21 +33,34 @@ WriteMakefile
    PREREQ_PM    => {
                     # any version should be ok
                     'Glib' => 0,
-
-                    # actually Glib-Perl requires perl 5.8, which has
-                    # Scalar::Util builtin already
-                    'Scalar::Util' => 0,
                    },
 
-   clean        => { FILES => 'FreezeNotify.html SignalIds.html SourceIds.html' },
+   clean        => { FILES => 'FreezeNotify.html SignalIds.html SourceIds.html TieProperties' },
+
+   EXTRA_META => <<'HERE',
+recommends:
+    Test::Pod: 1.00
+no_index:
+    directory:
+        - devel
+resources:
+    homepage: http://www.geocities.com/user42_kevin/glib-ex-objectbits/index.html
+    license: http://www.gnu.org/licenses/#GPL
+HERE
   );
 
 sub MY::postamble {
   return <<'MAKE_FRAG';
 
+LINT_FILES = $(TO_INST_PM) t/*.t
+# examples/*.pl devel/*.pl
 lint:
-	perl -MO=Lint lib/Glib/Ex/FreezeNotify.pm lib/Glib/Ex/SignalIds.pm
-	podchecker    lib/Glib/Ex/FreezeNotify.pm lib/Glib/Ex/SignalIds.pm
+	perl -MO=Lint $(LINT_FILES)
+pc:
+	-podchecker $(LINT_FILES)
+	perlcritic $(LINT_FILES)
+unused:
+	for i in $(LINT_FILES); do perl -Mwarnings::unused -I lib $$i; done
 
 myman:
 	mv MANIFEST MANIFEST.old
@@ -56,33 +70,43 @@ myman:
 FreezeNotify.html: lib/Glib/Ex/FreezeNotify.pm Makefile
 	-perl -MPod::Simple::HTML -e Pod::Simple::HTML::go \
 	  lib/Glib/Ex/FreezeNotify.pm \
+	| sed 's!http://search.cpan.org/perldoc?Glib%3A%3AEx%3A%3A\([^"]*\)!\1.html!' \
 	| sed 's!http://search.cpan.org/perldoc?Glib%3A%3A\([^"]*\)!http://gtk2-perl.sourceforge.net/doc/pod/Glib/\1.html!' \
 	  >FreezeNotify.html
 
 SignalIds.html: lib/Glib/Ex/SignalIds.pm Makefile
 	-perl -MPod::Simple::HTML -e Pod::Simple::HTML::go \
 	  lib/Glib/Ex/SignalIds.pm \
+	| sed 's!http://search.cpan.org/perldoc?Glib%3A%3AEx%3A%3A\([^"]*\)!\1.html!' \
 	| sed 's!http://search.cpan.org/perldoc?Glib%3A%3A\([^"]*\)!http://gtk2-perl.sourceforge.net/doc/pod/Glib/\1.html!' \
 	  >SignalIds.html
 
 SourceIds.html: lib/Glib/Ex/SourceIds.pm Makefile
 	-perl -MPod::Simple::HTML -e Pod::Simple::HTML::go \
 	  lib/Glib/Ex/SourceIds.pm \
+	| sed 's!http://search.cpan.org/perldoc?Glib%3A%3AEx%3A%3A\([^"]*\)!\1.html!' \
 	| sed 's!http://search.cpan.org/perldoc?Glib%3A%3A\([^"]*\)!http://gtk2-perl.sourceforge.net/doc/pod/Glib/\1.html!' \
 	  >SourceIds.html
+
+TieProperties.html: lib/Glib/Ex/TieProperties.pm Makefile
+	-perl -MPod::Simple::HTML -e Pod::Simple::HTML::go \
+	  lib/Glib/Ex/TieProperties.pm \
+	| sed 's!http://search.cpan.org/perldoc?Glib%3A%3AEx%3A%3A\([^"]*\)!\1.html!' \
+	| sed 's!http://search.cpan.org/perldoc?Glib%3A%3A\([^"]*\)!http://gtk2-perl.sourceforge.net/doc/pod/Glib/\1.html!' \
+	  >TieProperties.html
 
 # find files in the dist with mod times this year, but without this year in
 # the copyright line
 copyright-years-check:
 	year=`date +%Y`; \
 	tar tvfz Glib-Ex-ObjectBits-$(VERSION).tar.gz \
-	| grep $$year- \
+	| egrep '$$year-|debian/copyright' \
 	| sed 's:^.*Glib-Ex-ObjectBits-$(VERSION)/::' \
 	| (result=0; \
 	  while read i; do \
 	    case $$i in \
 	      '' | */ \
-	      | debian/changelog | debian/compat | debian/control \
+	      | debian/changelog | debian/compat \
 	      | t/pod.t \
 	      | COPYING | MANIFEST* | SIGNATURE | META.yml) \
 	      continue ;; \

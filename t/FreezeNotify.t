@@ -1,4 +1,6 @@
-# Copyright 2008 Kevin Ryde
+#!/usr/bin/perl
+
+# Copyright 2008, 2009 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -17,11 +19,19 @@
 
 use strict;
 use warnings;
-use Test::More tests => 18;
 use Glib::Ex::FreezeNotify;
+use Test::More tests => 23;
 
-ok ($Glib::Ex::FreezeNotify::VERSION >= 2);
-ok (Glib::Ex::FreezeNotify->VERSION >= 2);
+use Glib;
+diag ("Perl-Glib version ",Glib->VERSION);
+diag ("Compiled against Glib version ",
+      Glib::MAJOR_VERSION(), ".",
+      Glib::MINOR_VERSION(), ".",
+      Glib::MICRO_VERSION(), ".");
+diag ("Running on       Glib version ",
+      Glib::major_version(), ".",
+      Glib::minor_version(), ".",
+      Glib::micro_version(), ".");
 
 package Foo;
 use strict;
@@ -52,6 +62,30 @@ use Glib::Object::Subclass
                 ];
 
 package main;
+use strict;
+use warnings;
+
+# version number
+{
+  my $want_version = 3;
+  ok ($Glib::Ex::FreezeNotify::VERSION >= $want_version,
+      'VERSION variable');
+  ok (Glib::Ex::FreezeNotify->VERSION  >= $want_version,
+      'VERSION class method');
+  ok (eval { Glib::Ex::FreezeNotify->VERSION($want_version); 1 },
+      "VERSION class check $want_version");
+  ok (! eval { Glib::Ex::FreezeNotify->VERSION($want_version + 1000); 1 },
+      "VERSION class check " . ($want_version + 1000));
+
+  my $obj = Foo->new;
+  my $freezer = Glib::Ex::FreezeNotify->new ($obj);
+
+  ok ($freezer->VERSION >= $want_version, 'VERSION object method');
+  ok (eval { $freezer->VERSION($want_version); 1 },
+      "VERSION object check $want_version");
+  ok (! eval { $freezer->VERSION($want_version + 1000); 1 },
+      "VERSION object check " . ($want_version + 1000));
+}
 
 {
   my $obj = Foo->new;

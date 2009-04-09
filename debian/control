@@ -1,10 +1,10 @@
-# Copyright 2008 Kevin Ryde
+# Copyright 2008, 2009 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
 # Glib-Ex-ObjectBits is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as published
-# by the Free Software Foundation; either version 2, or (at your option) any
+# by the Free Software Foundation; either version 3, or (at your option) any
 # later version.
 #
 # Glib-Ex-ObjectBits is distributed in the hope that it will be useful,
@@ -15,18 +15,22 @@
 # You should have received a copy of the GNU General Public License along
 # with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# Build-Depends could have "libtest-pod-perl (>= 1.00)" but it's
+# optional and only makes the build tools drag in more stuff.
+
 Source: libglib-ex-objectbits-perl
 Section: perl
 Priority: optional
-Build-Depends: cdbs, debhelper (>= 4)
+Build-Depends: cdbs, debhelper (>= 5)
 Maintainer: Kevin Ryde <user42@zip.com.au>
-Standards-Version: 3.8.0
+Standards-Version: 3.8.1
 Homepage: http://www.geocities.com/user42_kevin/glib-ex-objectbits/index.html
 Bugs: mailto:user42@zip.com.au
 
 Package: libglib-ex-objectbits-perl
 Architecture: all
-Depends: libglib-perl
+Depends: perl (>= 5.8), libglib-perl, ${misc:Depends}
 Description: Glib::Object helper bits
- A couple of object-oriented helpers for Glib::Object signal freezing
- and source ID and signal ID disconnection.
+ Some object-oriented helpers for Glib::Object signal freezing, source
+ ID and signal ID disconnection, and properties tied to a hash.

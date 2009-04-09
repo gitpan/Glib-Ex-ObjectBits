@@ -1,10 +1,10 @@
-# Copyright 2008 Kevin Ryde
+# Copyright 2008, 2009 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
 # Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
-# Free Software Foundation; either version 2, or (at your option) any later
+# Free Software Foundation; either version 3, or (at your option) any later
 # version.
 #
 # Glib-Ex-ObjectBits is distributed in the hope that it will be useful, but
@@ -16,12 +16,13 @@
 # with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
 
 package Glib::Ex::SourceIds;
+use 5.006;
 use strict;
 use warnings;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 2;
+our $VERSION = 3;
 
 sub new {
   my ($class, @ids) = @_;
@@ -60,7 +61,7 @@ Glib::Ex::SourceIds -- hold Glib main loop source IDs
 
  # removed when ids object destroyed
  $ids = undef;
-        
+
 =head1 DESCRIPTION
 
 C<Glib::Ex::SourceIds> holds a set of Glib main loop source IDs.  When the
@@ -111,7 +112,7 @@ L<http://www.geocities.com/user42_kevin/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 
-Copyright 2008 Kevin Ryde
+Copyright 2008, 2009 Kevin Ryde
 
 Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by the

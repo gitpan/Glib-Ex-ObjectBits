@@ -1,10 +1,10 @@
-# Copyright 2008 Kevin Ryde
+# Copyright 2008, 2009 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
 # Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
-# Free Software Foundation; either version 2, or (at your option) any later
+# Free Software Foundation; either version 3, or (at your option) any later
 # version.
 #
 # Glib-Ex-ObjectBits is distributed in the hope that it will be useful, but
@@ -22,7 +22,7 @@ use Carp;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 2;
+our $VERSION = 3;
 
 # set this to 1 for some diagnostic prints
 use constant DEBUG => 0;
@@ -35,9 +35,9 @@ sub new {
 }
 
 sub add {
-  my ($self, @objects) = @_;
-  if (DEBUG) { print "FreezeNotify on ",join(' ',@objects),"\n"; }
-  foreach my $object (@objects) {
+  my $self = shift;
+  if (DEBUG) { print "FreezeNotify on ",join(' ',@_),"\n"; }
+  foreach my $object (@_) {
     $object->freeze_notify;
     push @$self, $object;
     Scalar::Util::weaken ($self->[-1]);
@@ -47,7 +47,8 @@ sub add {
 sub DESTROY {
   my ($self) = @_;
   while (@$self) {
-    my $object = pop @$self or next; # possible undef by weakening
+    my $object = pop @$self;
+    next if ! defined $object; # possible undef by weakening
     if (DEBUG) { print "FreezeNotify thaw $object\n"; }
     $object->thaw_notify;
   }
@@ -67,7 +68,7 @@ Glib::Ex::FreezeNotify -- freeze notifies in scope guard style
  { my $freezer = Glib::Ex::FreezeNotify->new ($obj);
    $obj->set (foo => 123);
    $obj->set (bar => 456);
-   # notify_thaw happens when $freezer goes out of scope
+   # notify signals emitted when $freezer goes out of scope
  }
 
  # or multiple objects in one FreezeNotify
@@ -79,39 +80,39 @@ Glib::Ex::FreezeNotify -- freeze notifies in scope guard style
 
 =head1 DESCRIPTION
 
-C<Glib::Ex::FreezeNotify> helps you C<freeze_notify> on given
-C<Glib::Object>s, with an automatic corresponding C<thaw_notify> at the end
-of the block, no matter how it's exited, whether a C<goto>, early C<return>,
-C<die>, etc.
+C<Glib::Ex::FreezeNotify> helps you C<freeze_notify> on given objects, with
+automatic corresponding C<thaw_notify> at the end of a block no matter how
+it's exited, whether a C<goto>, early C<return>, C<die>, etc.
 
-The main advantage is protection against an error throw leaving the object
-permanently frozen.  Errors can be thrown for a bad property name in a
-C<set>, or all the usual ways if calculating a value.  (Though as of
-Glib-Perl 1.181 bad value types as such generally only provoke warnings.)
+This protects against an error throw leaving the object permanently frozen.
+Even in a simple bit of code an error can be thrown for a bad property name
+in a C<set>, or all the usual ways if calculating a value.  (Though as of
+Glib-Perl 1.200 bad values as such generally only provoke warnings.)
 
-FreezeNotify works by having C<thaw_notify> in the destroy code of a
-FreezeNotify object.  General purpose cleanups in this destructor style can
-be done with C<Scope::Guard> or C<Sub::ScopeFinalizer>.  FreezeNotify is
-specific to C<Glib::Object> freeze/thaw.
+=head2 Operation
+
+FreezeNotify works by having C<thaw_notify> in the destroy code of the
+FreezeNotify object.
 
 FreezeNotify only holds weak references to its objects, so the mere fact
-they're due for later thawing doesn't keep them alive when nothing else
+they're due for later thawing doesn't keep them alive once nothing else
 cares if they live or die.  The only real effect of this is that frozen
-objects can be garbage collected within the freeze block, instead their life
-extended to the end of it.
+objects can be garbage collected within a freeze block, at the same point
+they would be without any freezing, instead their life extended to the end
+of the block.
 
-It works to nest freeze/thaws, done either with FreezeNotify or with
-explicit C<freeze_notify> calls.  C<Glib::Object> simply counts outstanding
-freezes so they don't have to nest; multiple freezes can overlap in any
+It works to nest freeze/thaws, done either with FreezeNotify or with other
+C<freeze_notify> calls.  C<Glib::Object> simply counts outstanding freezes
+and this means they don't have to nest; multiple freezes can overlap in any
 fashion.  If you're freezing for an extended time then a FreezeNotify object
-is a good way not to lose track of your thaws, though anything except a
-short freeze over a handful of C<set()> calls is probably unusual.
+is a good way not to lose track of your thaws, although anything except a
+short freeze over a handful of C<set()> calls would be unusual.
 
 =head1 FUNCTIONS
 
 =over 4
 
-=item C<< Glib::Ex::FreezeNotify->new ($object,...) >>
+=item C<< $freezer = Glib::Ex::FreezeNotify->new ($object,...) >>
 
 Do a C<< $object->freeze_notify >> on each given object and return a
 FreezeNotify object which, when it's destroyed, will
@@ -129,11 +130,29 @@ you instead use
       $obj->set (bar => 1);
     } # automatic thaw when $freezer goes out of scope
 
+=item C<< $freezer->add ($object,...) >>
+
+Add additional objects to the freezer, calling C<< $object->freeze_notify >>
+on each, and setting up for C<< thaw_notify >> the same as in C<new> above.
+
 =back
+
+=head1 OTHER NOTES
+
+When there's multiple objects in a freezer it's currently unspecified what
+order the C<thaw_notify> calls are made.  (What would be good?  First-in
+first-out, or a stack?)  You can create multiple FreezeNotify objects and
+arrange your blocks to destroyed them in a particular order if it matters.
+
+There's quite a few general purpose block-scope cleanup systems if you want
+more just thaws.  L<Scope::Guard|Scope::Guard>, L<AtExit|AtExit>,
+L<Sub::ScopeFinalizer|Scope::Guard> and L<Guard|Guard> use the destructor
+style.  L<Hook::Scope|Hook::Scope> and
+L<B::Hooks::EndOfScope|B::Hooks::EndOfScope> manipulate the code in a block.
 
 =head1 SEE ALSO
 
-L<Glib::Object>, L<Scope::Guard>, L<Sub::ScopeFinalizer>
+L<Glib::Object>
 
 =head1 HOME PAGE
 
@@ -141,7 +160,7 @@ L<http://www.geocities.com/user42_kevin/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 
-Copyright 2008 Kevin Ryde
+Copyright 2008, 2009 Kevin Ryde
 
 Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by the
