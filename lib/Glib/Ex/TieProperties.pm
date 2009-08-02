@@ -17,12 +17,13 @@
 
 
 package Glib::Ex::TieProperties;
+use 5.008;
 use strict;
 use warnings;
 use Carp;
 use Glib;
 
-our $VERSION = 3;
+our $VERSION = 4;
 
 use constant DEBUG => 0;
 
@@ -130,10 +131,10 @@ Glib::Ex::TieProperties -- tied hash for object property access
 =head1 DESCRIPTION
 
 C<Glib::Ex::TieProperties> accesses properties of a given C<Glib::Object>
-through a tied hash.  The keys are the property names and fetch and store
-operate on the property values.
+through a tied hash.  The keys are the property names and fetching and
+storing values operates on the property values.
 
-If you're just getting and setting property values you're best off simply
+If you're just getting and setting properties then you're best off simply
 calling the C<get> and C<set> methods, but one good use for a tie is to
 apply C<local> settings within a block, to be undone by a C<set> back to
 their previous values no matter how the block is left (C<goto>, C<return>,
@@ -145,8 +146,8 @@ C<die>, etc).
       do_page_up();
     }
 
-With C<new> function to create a tied anonymous hashref a single long
-C<local> expression is possible
+With C<new> to create a tied anonymous hashref a single long C<local>
+expression is possible
 
     # usually allow-shrink is not a good idea, have it temporarily
     local Glib::Ex::TieProperties->new($toplevel)->{'allow-shrink'} = 1;
@@ -165,7 +166,7 @@ statement.
 Like most C<tie> things, TieProperties tends to be better in concept than
 actuality.  There's relatively few object properties that you want to make
 block-scoped changes to, and things like getting all property names or
-values generally must pay attention to whether they're read-only,
+values must generally pay attention to whether they're read-only,
 write-only, etc, so a naive iteration is rarely much good.
 
 =head2 Details
@@ -179,13 +180,15 @@ they return properties in the same order as C<< $obj->list_properties >>
 gives, but don't depend on that.
 
 Getting a non-existent property name returns C<undef>, the same as a
-non-existent entry in an ordinary Perl hash.  C<exists> tests a key with
+non-existent entry in an ordinary Perl hash.  C<exists> tests for a key with
 C<find_property>.
 
 If a property exists but is not readable then fetching returns C<undef>.  An
 error in that case would also be possible, but that would make it impossible
 to use C<each> to iterate through an object with any write-only properties.
-Storing to a non-existent or read-only property throws an error.
+Storing to a non-existent property throws an error, a bit like a restricted
+hash (see L<Hash::Util>).  Storing to a read-only property likewise throws
+an error.
 
 =head1 FUNCTIONS
 
@@ -203,7 +206,7 @@ Optional key/value pairs in the C<tie> set the following options
 
 =over 4
 
-=item weak
+=item weak (boolean, default false)
 
 Hold only a weak reference to C<$object>.
 
@@ -265,7 +268,7 @@ would keep C<$object> alive forever.
 
 =back
 
-=head2 Tied Object Functions
+=head1 TIED OBJECT FUNCTIONS
 
 The tie object associated with the hash, which is returned by the C<tie> or
 obtained later with C<tied>, has the following methods.
@@ -295,12 +298,13 @@ Or getting the C<$tobj> later with C<tied>,
 
 =head1 OTHER NOTES
 
-The C<Glib> builtin C<< $object->tie_properties >> feature does a similar
-thing.  It works instead by populating C<$object> with individual tied field
-objects for the properties.  C<Glib::Ex::TieProperties> however is separate
-from the object and may use a bit less memory since it's one object instead
-of many.  But being separate means an extra variable, or an extra
-indirection for the C<in_object> style above.
+The C<Glib> builtin C<< $object->tie_properties >> feature does a very
+similar thing.  But it works instead by populating C<$object> with
+individual tied field objects for the properties.
+C<Glib::Ex::TieProperties> is separate from the object and may use a bit
+less memory since it's one object instead of many.  Being separate however
+means an extra variable, or an extra indirection for the C<in_object> style
+above.
 
 =head1 SEE ALSO
 
@@ -308,7 +312,7 @@ L<Glib>, L<Glib::Object>
 
 =head1 HOME PAGE
 
-L<http://www.geocities.com/user42_kevin/glib-ex-objectbits/index.html>
+L<http://user42.tuxfamily.org/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 

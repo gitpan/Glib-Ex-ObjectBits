@@ -22,24 +22,24 @@ use warnings;
 use Glib::Ex::TieProperties;
 use Test::More;
 
+use FindBin;
+use File::Spec;
+use lib File::Spec->catdir($FindBin::Bin,'inc');
+use MyTestHelpers;
+
 my $have_test_weaken = eval "use Test::Weaken 2.000; 1";
 if (! $have_test_weaken) {
   plan skip_all => "due to Test::Weaken 2.000 not available -- $@";
 }
 
-plan tests => 38;
+plan tests => 39;
+
+SKIP: { eval 'use Test::NoWarnings; 1'
+          or skip 'Test::NoWarnings not available', 1; }
 
 diag ("Test::Weaken version ", Test::Weaken->VERSION);
-require Gtk2;
-diag ("Perl-Glib    version ",Glib->VERSION);
-diag ("Compiled against Glib version ",
-      Glib::MAJOR_VERSION(), ".",
-      Glib::MINOR_VERSION(), ".",
-      Glib::MICRO_VERSION());
-diag ("Running on       Glib version ",
-      Glib::major_version(), ".",
-      Glib::minor_version(), ".",
-      Glib::micro_version());
+require Glib;
+MyTestHelpers::glib_gtk_versions();
 
 #-----------------------------------------------------------------------------
 package MyObject;
@@ -92,7 +92,7 @@ my %want_props = ('myprop-one' => 1,
 
 my $gobject_has_properties = defined ((Glib::Object->list_properties)[0]);
 
-my $want_version = 3;
+my $want_version = 4;
 {
   ok ($Glib::Ex::TieProperties::VERSION >= $want_version,
       'VERSION variable');

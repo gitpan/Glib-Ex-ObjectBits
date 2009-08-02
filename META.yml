@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Glib-Ex-ObjectBits
-version:             3
+version:             4
 abstract:            Helpers for Glib objects.
 license:             gpl
 author:              
@@ -17,6 +17,8 @@ recommends:
 no_index:
     directory:
         - devel
+        - inc
+        - t
 resources:
-    homepage: http://www.geocities.com/user42_kevin/glib-ex-objectbits/index.html
-    license: http://www.gnu.org/licenses/#GPL
+    homepage: http://user42.tuxfamily.org/glib-ex-objectbits/index.html
+    license: http://www.gnu.org/licenses/gpl.html

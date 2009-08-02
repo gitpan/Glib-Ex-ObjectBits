@@ -8,6 +8,7 @@ debian/rules
 debian/watch
 devel/tie-one.pl
 devel/tie-properties.pl
+inc/MyMakeMakerExtras.pm
 lib/Glib/Ex/FreezeNotify.pm
 lib/Glib/Ex/SignalIds.pm
 lib/Glib/Ex/SourceIds.pm
@@ -17,8 +18,12 @@ MANIFEST			This list of files
 MANIFEST.SKIP
 README
 SIGNATURE
+t/0-META-read.t
+t/0-Test-DistManifest.t
+t/0-Test-Pod.t
 t/FreezeNotify.t
-t/pod.t
+t/inc/MyTestHelpers.pm
+t/inc/Test/Weaken/Gtk2.pm
 t/SignalIds.t
 t/SourceIds.t
 t/TieProperties-test-weaken.t

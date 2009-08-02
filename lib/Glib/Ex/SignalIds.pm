@@ -16,14 +16,14 @@
 # with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
 
 package Glib::Ex::SignalIds;
-use 5.006;
+use 5.008;
 use strict;
 use warnings;
 use Carp;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 3;
+our $VERSION = 4;
 
 sub new {
   my ($class, $object, @ids) = @_;
@@ -51,6 +51,10 @@ sub DESTROY {
 sub object {
   my ($self) = @_;
   return $self->[0];
+}
+sub ids {
+  my ($self) = @_;
+  return @{$self}[1..$#$self];
 }
 
 sub disconnect {
@@ -88,9 +92,9 @@ Glib::Ex::SignalIds -- hold connected signal handler IDs
 
 =head1 DESCRIPTION
 
-C<Glib::Ex::SignalIds> holds a set of signal handler connection IDs and the
-object they're on.  When the SignalIds is destroyed it disconnects those
-IDs.
+C<Glib::Ex::SignalIds> holds a set of signal handler connection IDs
+(integers) and the object they're on.  When the SignalIds is destroyed it
+disconnects those IDs.
 
 This is designed to make life easier when putting connections on "external"
 objects which you should cleanup either in your own object destruction or
@@ -120,7 +124,7 @@ scrolling.  The C<SET_PROPERTY> in your new class might look like
 
 The C<$model &&> part allows C<undef> for no model, in which case the
 C<model_ids> becomes undef.  Either way any previous SignalIds object in
-C<model_ids> is discarded and it disconnects the previous model.  (Note in
+C<model_ids> is discarded and so disconnects the previous model.  (Note in
 the signal user data you won't want C<$self> but something weakened, to
 avoid a circular reference, the same as with all signal connections.)
 
@@ -132,14 +136,14 @@ need for disconnection and you won't need a SignalIds.
 
 =head2 Weakening
 
-SignalIds keeps only a weak reference to the target object, letting whoever
+SignalIds only keeps a weak reference to the target object, letting whoever
 or whatever has connected the IDs manage the target lifetime.  In particular
 this weakening means a SignalIds object can be kept in the instance data of
 the target object itself without creating a circular reference.
 
 If the target object is destroyed then all its signals are disconnected.
 SignalIds knows no explicit disconnects are needed in that case.  SignalIds
-also knows some forms of weakening and Perl's "global destruction" stage can
+also knows some forms of weakening and Perl's "global destruction" phase can
 give slightly odd situations where the target object has disconnected its
 signals but Perl hasn't yet zapped references to the object.  SignalIds
 therefore checks whether its IDs are still connected before disconnecting,
@@ -149,7 +153,7 @@ to avoid warnings from Glib.
 
 =over 4
 
-=item C<< Glib::Ex::SignalIds->new ($object, $id,$id,...) >>
+=item C<< $sigids = Glib::Ex::SignalIds->new ($object, $id1,$id2,...) >>
 
 Create and return a SignalIds object holding the given C<$id> signal handler
 IDs (integers) which are connected on C<$object> (a C<Glib::Object>).
@@ -163,10 +167,15 @@ to SignalIds to look after. Eg.
         ($obj, $obj->signal_connect (foo => \&do_foo),
                $obj->signal_connect_after (bar => \&do_bar));
 
-=item C<< $sigids->object() >>
+=item C<< $object = $sigids->object() >>
 
 Return the object held in C<$sigids>, or C<undef> if it's been destroyed
 (zapped by weakening).
+
+=item C<< @ids = $sigids->ids() >>
+
+Return a list of the signal IDs held in C<$sigids> (possibly an empty list
+if nothing held).
 
 =item C<< $sigids->disconnect() >>
 
@@ -182,7 +191,7 @@ L<Glib::Object>, L<Glib::Ex::SourceIds>
 
 =head1 HOME PAGE
 
-L<http://www.geocities.com/user42_kevin/glib-ex-objectbits/index.html>
+L<http://user42.tuxfamily.org/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 

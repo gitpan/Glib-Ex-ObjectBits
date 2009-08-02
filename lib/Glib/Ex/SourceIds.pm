@@ -16,13 +16,13 @@
 # with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
 
 package Glib::Ex::SourceIds;
-use 5.006;
+use 5.008;
 use strict;
 use warnings;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 3;
+our $VERSION = 4;
 
 sub new {
   my ($class, @ids) = @_;
@@ -108,7 +108,7 @@ L<Glib::MainLoop>, L<Glib::Ex::SignalIds>
 
 =head1 HOME PAGE
 
-L<http://www.geocities.com/user42_kevin/glib-ex-objectbits/index.html>
+L<http://user42.tuxfamily.org/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 

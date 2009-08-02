@@ -16,13 +16,14 @@
 # with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
 
 package Glib::Ex::FreezeNotify;
+use 5.008;
 use strict;
 use warnings;
 use Carp;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 3;
+our $VERSION = 4;
 
 # set this to 1 for some diagnostic prints
 use constant DEBUG => 0;
@@ -145,7 +146,7 @@ first-out, or a stack?)  You can create multiple FreezeNotify objects and
 arrange your blocks to destroyed them in a particular order if it matters.
 
 There's quite a few general purpose block-scope cleanup systems if you want
-more just thaws.  L<Scope::Guard|Scope::Guard>, L<AtExit|AtExit>,
+more than just thaws.  L<Scope::Guard|Scope::Guard>, L<AtExit|AtExit>,
 L<Sub::ScopeFinalizer|Scope::Guard> and L<Guard|Guard> use the destructor
 style.  L<Hook::Scope|Hook::Scope> and
 L<B::Hooks::EndOfScope|B::Hooks::EndOfScope> manipulate the code in a block.
@@ -156,7 +157,7 @@ L<Glib::Object>
 
 =head1 HOME PAGE
 
-L<http://www.geocities.com/user42_kevin/glib-ex-objectbits/index.html>
+L<http://user42.tuxfamily.org/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 

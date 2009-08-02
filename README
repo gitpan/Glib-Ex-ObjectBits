@@ -40,4 +40,4 @@ The only prerequisite is Glib-Perl, but of course Glib::Object does
 very little by itself so in practice you'll be using this code with
 Gtk2-Perl etc.  The ObjectBits home page is
 
-  http://www.geocities.com/user42_kevin/glib-ex-objectbits/index.html
+  http://user42.tuxfamily.org/glib-ex-objectbits/index.html

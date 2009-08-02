@@ -22,24 +22,26 @@ use warnings;
 use Glib::Ex::TieProperties;
 use Test::More;
 
+use FindBin;
+use File::Spec;
+use lib File::Spec->catdir($FindBin::Bin,'inc');
+use MyTestHelpers;
+use Test::Weaken::Gtk2;
+
 my $have_test_weaken = eval "use Test::Weaken 2.000; 1";
 if (! $have_test_weaken) {
   plan skip_all => "due to Test::Weaken 2.000 not available -- $@";
 }
 
-plan tests => 1;
+plan tests => 2;
+
+SKIP: { eval 'use Test::NoWarnings; 1'
+          or skip 'Test::NoWarnings not available', 1; }
 
 diag ("Test::Weaken version ", Test::Weaken->VERSION);
-require Gtk2;
-diag ("Perl-Glib    version ",Glib->VERSION);
-diag ("Compiled against Glib version ",
-      Glib::MAJOR_VERSION(), ".",
-      Glib::MINOR_VERSION(), ".",
-      Glib::MICRO_VERSION());
-diag ("Running on       Glib version ",
-      Glib::major_version(), ".",
-      Glib::minor_version(), ".",
-      Glib::micro_version());
+require Glib;
+MyTestHelpers::glib_gtk_versions();
+
 
 #-----------------------------------------------------------------------------
 package MyObject;
@@ -83,11 +85,15 @@ package main;
 # new()
 
 {
-  my $leaks = Test::Weaken::leaks (sub {
-                                     my $obj = MyObject->new;
-                                     my $h = Glib::Ex::TieProperties->new($obj);
-                                     return [ $h, $obj, tied(%$h) ];
-                                   });
+  # Test::Weaken 3.002 descends into the tie itself, when ready to require
+  # that
+  #
+  my $leaks = Test::Weaken::leaks
+    (sub {
+       my $obj = MyObject->new;
+       my $h = Glib::Ex::TieProperties->new($obj);
+       return [ $h, $obj ];
+     });
   is ($leaks, undef, 'deep garbage collection');
   if ($leaks) {
     diag "Test-Weaken ", explain $leaks;

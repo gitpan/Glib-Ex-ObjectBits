@@ -21,22 +21,22 @@
 use strict;
 use warnings;
 use Glib::Ex::SignalIds;
-use Test::More tests => 18;
+use Test::More tests => 23;
 
-use Glib;
-diag ("Perl-Glib version ",Glib->VERSION);
-diag ("Compiled against Glib version ",
-      Glib::MAJOR_VERSION(), ".",
-      Glib::MINOR_VERSION(), ".",
-      Glib::MICRO_VERSION(), ".");
-diag ("Running on       Glib version ",
-      Glib::major_version(), ".",
-      Glib::minor_version(), ".",
-      Glib::micro_version(), ".");
+use FindBin;
+use File::Spec;
+use lib File::Spec->catdir($FindBin::Bin,'inc');
+use MyTestHelpers;
+
+SKIP: { eval 'use Test::NoWarnings; 1'
+          or skip 'Test::NoWarnings not available', 1; }
+
+require Glib;
+MyTestHelpers::glib_gtk_versions();
 
 # version number
 {
-  my $want_version = 3;
+  my $want_version = 4;
   ok ($Glib::Ex::SignalIds::VERSION >= $want_version, 'VERSION variable');
   ok (Glib::Ex::SignalIds->VERSION  >= $want_version, 'VERSION class method');
   ok (eval { Glib::Ex::SignalIds->VERSION($want_version); 1 },
@@ -54,6 +54,24 @@ diag ("Running on       Glib version ",
   ok (! eval { $sigs->VERSION($want_version + 1000); 1 },
       "VERSION object check " . ($want_version + 1000));
 }
+
+
+#------------------------------------------------------------------------------
+
+package MyClass;
+use Glib;
+use Glib::Object::Subclass
+  Glib::Object::,
+  properties => [ Glib::ParamSpec->int
+                  ('myprop',
+                   'myprop',
+                   'Blurb',
+                   0, 100, 50,
+                   Glib::G_PARAM_READWRITE) ];
+package main;
+
+#------------------------------------------------------------------------------
+# new and DESTROY
 
 # the SignalIds object gets garbage collected when weakened
 {
@@ -149,21 +167,24 @@ ok ($@, 'notice ref as first arg');
 eval { Glib::Ex::SignalIds->new (bless [], 'bogosity'); };
 ok ($@, 'notice wrong blessed as first arg');
 
+#------------------------------------------------------------------------------
+# object(), ids(), add()
+
+{
+  my $obj = MyClass->new;
+  my $id = $obj->signal_connect (notify => sub {});
+  my $sigs = Glib::Ex::SignalIds->new ($obj, $id);
+  is ($sigs->object, $obj, 'object()');
+  is_deeply ([$sigs->ids], [$id], 'ids()');
+}
+
+{
+  my $obj = MyClass->new;
+  my $sigs = Glib::Ex::SignalIds->new ($obj);
+  is_deeply ([$sigs->ids], [], 'ids() empty');
+  my $id = $obj->signal_connect (notify => sub {});
+  $sigs->add ($id);
+  is_deeply ([$sigs->ids], [$id], 'ids() empty');
+}
 
 exit 0;
-
-
-package MyClass;
-use strict;
-use warnings;
-use Glib;
-use Glib::Object::Subclass
-  Glib::Object::,
-  properties => [ Glib::ParamSpec->int
-                  ('myprop',
-                   'myprop',
-                   'Blurb',
-                   0, 100, 50,
-                   Glib::G_PARAM_READWRITE) ];
-
-__END__

@@ -20,18 +20,19 @@
 use strict;
 use warnings;
 use Glib::Ex::FreezeNotify;
-use Test::More tests => 23;
+use Test::More tests => 24;
 
-use Glib;
-diag ("Perl-Glib version ",Glib->VERSION);
-diag ("Compiled against Glib version ",
-      Glib::MAJOR_VERSION(), ".",
-      Glib::MINOR_VERSION(), ".",
-      Glib::MICRO_VERSION(), ".");
-diag ("Running on       Glib version ",
-      Glib::major_version(), ".",
-      Glib::minor_version(), ".",
-      Glib::micro_version(), ".");
+use FindBin;
+use File::Spec;
+use lib File::Spec->catdir($FindBin::Bin,'inc');
+use MyTestHelpers;
+
+SKIP: { eval 'use Test::NoWarnings; 1'
+          or skip 'Test::NoWarnings not available', 1; }
+
+require Glib;
+MyTestHelpers::glib_gtk_versions();
+
 
 package Foo;
 use strict;
@@ -67,7 +68,7 @@ use warnings;
 
 # version number
 {
-  my $want_version = 3;
+  my $want_version = 4;
   ok ($Glib::Ex::FreezeNotify::VERSION >= $want_version,
       'VERSION variable');
   ok (Glib::Ex::FreezeNotify->VERSION  >= $want_version,
