@@ -23,7 +23,7 @@ use warnings;
 use Carp;
 use Glib;
 
-our $VERSION = 4;
+our $VERSION = 5;
 
 use constant DEBUG => 0;
 
@@ -119,6 +119,8 @@ __END__
 
 Glib::Ex::TieProperties -- tied hash for object property access
 
+=for test_synopsis my ($object)
+
 =head1 SYNOPSIS
 
  use Glib::Ex::TieProperties;
@@ -163,24 +165,24 @@ statement.
       my $req = $toplevel->size_request;
     }
 
-Like most C<tie> things, TieProperties tends to be better in concept than
-actuality.  There's relatively few object properties that you want to make
-block-scoped changes to, and things like getting all property names or
-values must generally pay attention to whether they're read-only,
-write-only, etc, so a naive iteration is rarely much good.
+Like most C<tie> things, TieProperties is better in concept than actuality.
+There's relatively few object properties wanting block-scoped changes, and
+things like getting all property names or values must generally pay
+attention to whether properties are read-only, write-only, etc, so a naive
+values iteration is rarely much good.
 
 =head2 Details
 
 The property names for the keys are anything accepted by C<get_property>,
 C<find_property>, etc.  This means underscores "_" can be used in place of
-dashes "-", for example C<border_width> is an alias for C<border-width>.
+dashes "-".  For example C<border_width> is an alias for C<border-width>.
 
 The C<keys> and C<each> operations return just the dashed names.  Currently
 they return properties in the same order as C<< $obj->list_properties >>
 gives, but don't depend on that.
 
 Getting a non-existent property name returns C<undef>, the same as a
-non-existent entry in an ordinary Perl hash.  C<exists> tests for a key with
+non-existent entry in an ordinary Perl hash.  C<exists> tests a key with
 C<find_property>.
 
 If a property exists but is not readable then fetching returns C<undef>.  An
@@ -232,9 +234,9 @@ C<$object>.  This is the same as
     tie my(%hash), 'Glib::Ex::TieProperties', $object;
     $hashref = \%hash;
 
-The difference between using a hash or hashref is normally just a matter of
-which style you prefer.  With the C<my> worked into the C<tie> call it can
-be a one line setup either way.
+The difference between a hash or hashref is normally just a matter of which
+style you prefer.  Both can be created with one line of code (With the C<my>
+worked into the C<tie> call for the plain hash).
 
 =item C<< Glib::Ex::TieProperties->in_object ($object) >>
 
@@ -253,11 +255,12 @@ in addition
 
 =item field
 
-Set the field name within C<$object> which becomes the tied hash.  The
-default "property" is designed to be readable and not too likely to clash
-with other things, but you can control it with the C<field> parameter,
+Set the field name within C<$object> for the tied hash.  The default
+"property" is designed to be readable and not too likely to clash with other
+things, but you can control it with the C<field> parameter,
 
-    Glib::Ex::TieProperties->in_object ($object, field => 'xyzzy')
+    Glib::Ex::TieProperties->in_object ($object,
+                                        field => 'xyzzy')
     print $object->{'xyzzy'}->{'border-width'};
 
 =back
@@ -270,7 +273,7 @@ would keep C<$object> alive forever.
 
 =head1 TIED OBJECT FUNCTIONS
 
-The tie object associated with the hash, which is returned by the C<tie> or
+The tie object associated with the hash, as returned by the C<tie> or
 obtained later with C<tied>, has the following methods.
 
 =over 4
@@ -298,13 +301,12 @@ Or getting the C<$tobj> later with C<tied>,
 
 =head1 OTHER NOTES
 
-The C<Glib> builtin C<< $object->tie_properties >> feature does a very
-similar thing.  But it works instead by populating C<$object> with
-individual tied field objects for the properties.
-C<Glib::Ex::TieProperties> is separate from the object and may use a bit
-less memory since it's one object instead of many.  Being separate however
-means an extra variable, or an extra indirection for the C<in_object> style
-above.
+The C<Glib> module C<< $object->tie_properties >> feature does a very
+similar thing.  But it works by populating C<$object> with individual tied
+field objects for the properties.  C<Glib::Ex::TieProperties> is separate
+from the object and may use a bit less memory since it's one object instead
+of many.  Separate however means an extra variable, or an extra indirection
+for the C<in_object> style above.
 
 =head1 SEE ALSO
 

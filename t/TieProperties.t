@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
 
+use 5.008;
 use strict;
 use warnings;
 use Glib::Ex::TieProperties;
@@ -92,7 +93,7 @@ my %want_props = ('myprop-one' => 1,
 
 my $gobject_has_properties = defined ((Glib::Object->list_properties)[0]);
 
-my $want_version = 4;
+my $want_version = 5;
 {
   ok ($Glib::Ex::TieProperties::VERSION >= $want_version,
       'VERSION variable');

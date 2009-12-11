@@ -1,5 +1,5 @@
 This file contains message digests of all files listed in MANIFEST,
-signed via the Module::Signature module, version 0.55.
+signed via the Module::Signature module, version 0.61.
 
 To verify the content in this distribution, first make sure you have
 Module::Signature installed, then type:
@@ -14,40 +14,43 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 8624bcdae55baeef00cd11d5dfcfa60f68710a02 COPYING
-SHA1 a262148d8dba445ff9539c802d8cad3f4e84ab02 Changes
-SHA1 4176fe29587263a0067e6ca18a4281ce7f98be57 MANIFEST
-SHA1 d950f2bc285437dc6166b615e2a22321416d4fd1 MANIFEST.SKIP
-SHA1 247c39ae177b67dd855b54857a8af8c6fb14d250 META.yml
-SHA1 f2c65dca925f8113129a3f70a012dd2cb12435d5 Makefile.PL
-SHA1 d0724ca5d637679e4b159b4918c12059dbacd71d README
-SHA1 1467bf0433f2cd65dca18d9992851b173a9fdba1 debian/changelog
+SHA1 842745cb706f8f2126506f544492f7a80dbe29b3 COPYING
+SHA1 5d7038fccc003c24a14247607046459a66e2991e Changes
+SHA1 72429c932d15a2642ff538ba809a5e3f600af300 MANIFEST
+SHA1 bb78fa7bf2dfebdda59c9efb64db51b173fb9e2f MANIFEST.SKIP
+SHA1 9003e9abcac6460062eb969eb516ee65e3ccf5b6 META.yml
+SHA1 4c5e50d0e199e2287eac0d9e15366894b28c2cce Makefile.PL
+SHA1 aea14a529977e9cb395f110e57c97a967483772a README
+SHA1 a06104e5a9935c4eabe398ec7e1bdbd29301a53b debian/changelog
 SHA1 ac3478d69a3c81fa62e60f5c3696165a4e5e6ac4 debian/compat
-SHA1 664549a310cd9841ff95c993edea6e50a590c7c7 debian/control
+SHA1 b6e009b87e68e6c79c63e7b05db37d45fa422ea5 debian/control
 SHA1 af4476c4b0fbe2d9f377d3670b7929b4682c9ff8 debian/copyright
 SHA1 bc98b616145701b8c6a72aec5c0f447455332987 debian/rules
 SHA1 e2e3436c7bdeb56c020c572192e2e38d337b1607 debian/watch
-SHA1 d8a93d07df7d8bbfd6ca97202d9d010eab16e1fb devel/tie-one.pl
-SHA1 57f0dcd9e4c2b8b34456334707c484f561b2e1ae devel/tie-properties.pl
-SHA1 83593c87ad0c236dfbb2613be701b8e6ea1dfa83 inc/MyMakeMakerExtras.pm
-SHA1 ed6ad26aef19735daaeca6c795ee0dbc7e99f819 lib/Glib/Ex/FreezeNotify.pm
-SHA1 d8c27add327dc088ec21485c47e147cb969b5484 lib/Glib/Ex/SignalIds.pm
-SHA1 c36cd60cb400608d8bb9358ab2190082a6a2847e lib/Glib/Ex/SourceIds.pm
-SHA1 824df26e7a303f7422ed8aa2c51b7603b8f46b35 lib/Glib/Ex/TieProperties.pm
-SHA1 4351c3885de5689729bfeda126cd22dfe7b21260 t/0-META-read.t
+SHA1 80faf764f5a589a9913e7718bfeebca81cfa67ec devel/SignalHookIds.pm
+SHA1 605f6e62d3be55b4c3be3d47d36489bfdc81db13 devel/tie-one.pl
+SHA1 814dfb992fa8689b85ac48576739e9f5b67aa829 devel/tie-properties.pl
+SHA1 994057e0defa4d28cbfdba1c4949ce6272b463b6 inc/MyMakeMakerExtras.pm
+SHA1 8abe77ce19ad5175c08fe5e8d515518296acac90 lib/Glib/Ex/FreezeNotify.pm
+SHA1 cb7381d40206cedc79b6e25ee1c5ae508a4050f3 lib/Glib/Ex/SignalIds.pm
+SHA1 debbbe458d8b94c47276b26f2117d49acc2ac0f5 lib/Glib/Ex/SourceIds.pm
+SHA1 724ea461023e3271beac9cd421915b8c4a82e0f4 lib/Glib/Ex/TieProperties.pm
+SHA1 378b932305fb60823467c2af3c771fe3fc295a13 t/0-META-read.t
 SHA1 a343ed4dce96d05de51eed1ec065911584b96fce t/0-Test-DistManifest.t
 SHA1 bba0dc087cbe64d8f100ab77e6cef061c0bebf27 t/0-Test-Pod.t
-SHA1 c4d68738fd09345ebfe49d6f0a332898acf9f3da t/FreezeNotify.t
-SHA1 75ebf75b6f9db11d67449b52fc73cf5f994746b2 t/SignalIds.t
-SHA1 33dfca8c3d87a153c8166fc560c844b5ca2825f3 t/SourceIds.t
+SHA1 5fa94e1e88e44064d1e6b21c88a4c9374a17bfd1 t/0-Test-Synopsis.t
+SHA1 d369522d8a9a887fdf1a1e14cb83e25fa2188727 t/0-Test-YAML-Meta.t
+SHA1 8b697071316a0bc782e7659fa1381fe4d5bb3dc0 t/FreezeNotify.t
+SHA1 a250e53d16e83317add66840739d82891eec65de t/SignalIds.t
+SHA1 5d640d4832b21be620940233dfec5e306a692f61 t/SourceIds.t
 SHA1 7b13e0bd547f0371bcb9a74d01a4abce84773b56 t/TieProperties-test-weaken.t
-SHA1 221daddcdec1122c51e3d26f17249f1306b46e01 t/TieProperties.t
-SHA1 ad1e9eef000e560220872d21b1513ac2b95bb626 t/inc/MyTestHelpers.pm
-SHA1 17821b2ebdfac71412717818f133b4645f2f6754 t/inc/Test/Weaken/Gtk2.pm
+SHA1 93b8bdd3b086dc1a13b5a539b2998131f5dd5f6a t/TieProperties.t
+SHA1 7e65c1ad5410e42561d9864258715047b760a89a t/inc/MyTestHelpers.pm
+SHA1 624f2ce0737bca05c6e0023d764115b43eee4eed t/inc/Test/Weaken/Gtk2.pm
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
+Version: GnuPG v1.4.10 (GNU/Linux)
 
-iD8DBQFKcsCWLFMCIV9q3ToRAtEVAKCj/LjKiyy1D2v6G/qc6Z5e4aneyACfTYB0
-f75MKK0foDlkW+KIGlnnuV4=
-=xF+0
+iD8DBQFLIrz0LFMCIV9q3ToRAga+AKC0PoNbKqZuazi6CS/f8No9ZDKhQACeNdS4
+kDoc2th9nAUhPBkZYAZ4TK8=
+=a+Ij
 -----END PGP SIGNATURE-----

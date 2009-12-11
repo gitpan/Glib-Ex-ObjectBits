@@ -23,7 +23,7 @@ use Carp;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 4;
+our $VERSION = 5;
 
 # set this to 1 for some diagnostic prints
 use constant DEBUG => 0;
@@ -62,6 +62,8 @@ __END__
 
 Glib::Ex::FreezeNotify -- freeze notifies in scope guard style
 
+=for test_synopsis my ($obj, $obj1, $obj2)
+
 =head1 SYNOPSIS
 
  use Glib::Ex::FreezeNotify;
@@ -74,21 +76,21 @@ Glib::Ex::FreezeNotify -- freeze notifies in scope guard style
 
  # or multiple objects in one FreezeNotify
  {
-   my $freezer = Glib::Ex::FreezeNotify->new ($obj1, $obj2, ...);
+   my $freezer = Glib::Ex::FreezeNotify->new ($obj1, $obj2);
    $obj1->set (foo => 999);
-   ...
+   $obj2->set (bar => 666);
  }
 
 =head1 DESCRIPTION
 
 C<Glib::Ex::FreezeNotify> helps you C<freeze_notify> on given objects, with
-automatic corresponding C<thaw_notify> at the end of a block no matter how
+automatic corresponding C<thaw_notify> at the end of a block, no matter how
 it's exited, whether a C<goto>, early C<return>, C<die>, etc.
 
 This protects against an error throw leaving the object permanently frozen.
 Even in a simple bit of code an error can be thrown for a bad property name
-in a C<set>, or all the usual ways if calculating a value.  (Though as of
-Glib-Perl 1.200 bad values as such generally only provoke warnings.)
+in a C<set>, or whle calculating a value.  (As of Glib-Perl 1.222 an invalid
+argument type to C<set> generally only provokes warnings though.)
 
 =head2 Operation
 
@@ -97,17 +99,17 @@ FreezeNotify object.
 
 FreezeNotify only holds weak references to its objects, so the mere fact
 they're due for later thawing doesn't keep them alive once nothing else
-cares if they live or die.  The only real effect of this is that frozen
-objects can be garbage collected within a freeze block, at the same point
-they would be without any freezing, instead their life extended to the end
-of the block.
+cares if they live or die.  The effect of this is that frozen objects can be
+garbage collected within a freeze block, at the same point they would be
+without any freezing, instead of extending their life to the end of the
+block.
 
 It works to nest freeze/thaws, done either with FreezeNotify or with other
 C<freeze_notify> calls.  C<Glib::Object> simply counts outstanding freezes
-and this means they don't have to nest; multiple freezes can overlap in any
-fashion.  If you're freezing for an extended time then a FreezeNotify object
-is a good way not to lose track of your thaws, although anything except a
-short freeze over a handful of C<set()> calls would be unusual.
+and this means they don't have to nest -- multiple freezes can overlap in
+any fashion.  If you're freezing for an extended time then a FreezeNotify
+object is a good way not to lose track of your thaws, although anything
+except a short freeze for a handful of C<set()> calls would be unusual.
 
 =head1 FUNCTIONS
 
@@ -140,10 +142,10 @@ on each, and setting up for C<< thaw_notify >> the same as in C<new> above.
 
 =head1 OTHER NOTES
 
-When there's multiple objects in a freezer it's currently unspecified what
-order the C<thaw_notify> calls are made.  (What would be good?  First-in
-first-out, or a stack?)  You can create multiple FreezeNotify objects and
-arrange your blocks to destroyed them in a particular order if it matters.
+When there's multiple objects in a freezer it's unspecified what order the
+C<thaw_notify> calls are made.  What would be good?  First-in first-out, or
+a stack?  You can create multiple FreezeNotify objects and arrange your
+blocks to destroyed them in a particular order if it matters.
 
 There's quite a few general purpose block-scope cleanup systems if you want
 more than just thaws.  L<Scope::Guard|Scope::Guard>, L<AtExit|AtExit>,

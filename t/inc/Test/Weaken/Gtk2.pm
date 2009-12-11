@@ -43,7 +43,7 @@ sub destructor_destroy {
   }
   $ref->destroy;
 
-  # iterate to make WidgetCursor go unbusy
+  # iterate to make Widget Cursor go unbusy
   require MyTestHelpers;
   MyTestHelpers::main_iterations();
 }

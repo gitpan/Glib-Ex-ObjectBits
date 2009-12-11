@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
 
+use 5.008;
 use strict;
 use warnings;
 use Glib::Ex::FreezeNotify;
@@ -68,7 +69,7 @@ use warnings;
 
 # version number
 {
-  my $want_version = 4;
+  my $want_version = 5;
   ok ($Glib::Ex::FreezeNotify::VERSION >= $want_version,
       'VERSION variable');
   ok (Glib::Ex::FreezeNotify->VERSION  >= $want_version,

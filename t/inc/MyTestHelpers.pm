@@ -22,13 +22,32 @@ use strict;
 use warnings;
 
 use base 'Exporter';
-our @EXPORT = qw(main_iterations
-                 warn_suppress_gtk_icon
-                 glib_gtk_versions
-                 any_signal_connections);
+use vars qw(@EXPORT_OK %EXPORT_TAGS);
+our @EXPORT_OK = qw(findrefs
+                    main_iterations
+                    warn_suppress_gtk_icon
+                    glib_gtk_versions
+                    any_signal_connections);
+our %EXPORT_TAGS = (all => \@EXPORT_OK);
 
 use constant DEBUG => 0;
 
+
+#-----------------------------------------------------------------------------
+
+sub findrefs {
+  my ($obj) = @_;
+  defined $obj or return;
+  require Scalar::Util;
+  if (ref $obj && Scalar::Util::reftype($obj) eq 'HASH') {
+    Test::More::diag ("Keys: ", join(',', keys %$obj), "\n");
+  }
+  if (eval { require Devel::FindRef }) {
+    Test::More::diag (Devel::FindRef::track($obj, 8));
+  } else {
+    Test::More::diag ("Devel::FindRef not available -- $@\n");
+  }
+}
 
 #-----------------------------------------------------------------------------
 # Gtk/Glib helpers

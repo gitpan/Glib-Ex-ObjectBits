@@ -22,7 +22,7 @@ use warnings;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 4;
+our $VERSION = 5;
 
 sub new {
   my ($class, @ids) = @_;

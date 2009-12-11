@@ -18,6 +18,7 @@
 # with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
 
 
+use 5.008;
 use strict;
 use warnings;
 use Glib::Ex::SourceIds;
@@ -41,7 +42,7 @@ sub do_idle {
 
 # version number
 {
-  my $want_version = 4;
+  my $want_version = 5;
   ok ($Glib::Ex::SourceIds::VERSION >= $want_version, 'VERSION variable');
   ok (Glib::Ex::SourceIds->VERSION  >= $want_version, 'VERSION class method');
   ok (eval { Glib::Ex::SourceIds->VERSION($want_version); 1 },

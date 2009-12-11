@@ -21,18 +21,196 @@ package MyMakeMakerExtras;
 use strict;
 use warnings;
 
+sub DEBUG () { 0 };
+
+my %my_options;
+
+sub WriteMakefile {
+  my %opts = @_;
+
+  if (exists $opts{'META_MERGE'}) {
+    # cf. ExtUtils::MM_Any::metafile_data() default ['t','inc']
+    foreach my $dir ('devel', 'examples', 'junk', 'maybe') {
+      if (-d $dir) {
+        push @{$opts{'META_MERGE'}->{'no_index'}->{'directory'}}, $dir;
+      }
+    }
+
+    $opts{'META_MERGE'}->{'resources'}->{'license'} ||=
+      'http://www.gnu.org/licenses/gpl.html';
+    _meta_merge_shared_tests (\%opts);
+  }
+
+  $opts{'clean'}->{'FILES'} .= ' temp-lintian $(MY_HTML_FILES)';
+  $opts{'realclean'}->{'FILES'} .= ' TAGS';
+
+  if (! defined &MY::postamble) {
+    *MY::postamble = \&MyMakeMakerExtras::postamble;
+  }
+
+  foreach my $opt ('MyMakeMakerExtras_Pod_Coverage',
+                   'MyMakeMakerExtras_LINT_FILES',
+                   'MY_NO_HTML') {
+    $my_options{$opt} = delete $opts{$opt};
+  }
+
+  ExtUtils::MakeMaker::WriteMakefile (%opts);
+}
+
+sub strip_comments {
+  my ($str) = @_;
+  $str =~ s/^\s*#.*\n//mg;
+  $str
+}
+
+#------------------------------------------------------------------------------
+# META_MERGE
+
+sub _meta_merge_shared_tests {
+  my ($opts) = @_;
+  if (-e 't/0-Test-Pod.t') {
+    _meta_merge_req_add (_meta_merge_maximum_tests($opts),
+                         'Test::Pod' => '1.00');
+  }
+  if (-e 't/0-Test-DistManifest.t') {
+    _meta_merge_req_add (_meta_merge_maximum_tests($opts),
+                         'Test::DistManifest' => 0);
+  }
+  if (-e 't/0-Test-YAML-Meta.t') {
+    _meta_merge_req_add (_meta_merge_maximum_tests($opts),
+                         'Test::YAML::Meta' => '0.13');
+  }
+  if (-e 't/0-META-read.t') {
+    _meta_merge_req_add_ver ($opts, 5.00307, 'FindBin' => 0);
+    _meta_merge_req_add_ver ($opts, 5.00405, 'File::Spec' => 0);
+    _meta_merge_req_add (_meta_merge_maximum_tests($opts),
+                         'Test::NoWarnings'  => 0,
+                         'YAML'              => 0,
+                         'YAML::Syck'        => 0,
+                         'YAML::Tiny'        => 0,
+                         'YAML::XS'          => 0,
+                         'Parse::CPAN::Meta' => 0);
+  }
+}
+sub _meta_merge_maximum_tests {
+  my ($opts) = @_;
+  $opts->{'META_MERGE'}->{'optional_features'}->{'maximum_tests'} ||=
+    { description => 'Have "make test" do as much as possible.',
+      requires => { },
+    };
+  return $opts->{'META_MERGE'}->{'optional_features'}->{'maximum_tests'}->{'requires'};
+}
+sub _meta_merge_req_add_ver {
+  my ($opts, $perlver, @deps) = @_;
+  if (! defined $opts->{'MIN_PERL_VERSION'}
+      || $opts->{'MIN_PERL_VERSION'} < $perlver) {
+    _meta_merge_req_add (_meta_merge_maximum_tests($opts),
+                         @deps);
+  }
+}
+sub _meta_merge_req_add {
+  my $req = shift;
+  if (DEBUG) { local $,=' '; print "MyMakeMakerExtras META_MERGE",@_,"\n"; }
+  while (@_) {
+    my $module = shift;
+    my $version = shift;
+    if (defined $req->{$module}) {
+      if ($req->{$module} > $version) {
+        $version = $req->{$module};
+      }
+    }
+    $req->{$module} = $version;
+  }
+}
+
+#------------------------------------------------------------------------------
+# postamble()
 
 sub postamble {
   my ($makemaker) = @_;
-  my $post = <<'HERE';
+  if (DEBUG) { print "MyMakeMakerExtras postamble() $makemaker\n"; }
+
+  if (DEBUG >= 2) {
+    require Data::Dumper;
+    print Data::Dumper::Dumper($makemaker);
+  }
+  my $post = $my_options{'postamble_docs'};
+
+  unless ($my_options{'MY_NO_HTML'}) {
+    $post .= <<'HERE';
+
+#------------------------------------------------------------------------------
+# docs stuff -- from inc/MyMakeMakerExtras.pm
+
+MY_POD2HTML = perl -MPod::Simple::HTML -e Pod::Simple::HTML::go
+MY_MUNGHTML = \
+  sed -e 's!http://search.cpan.org/perldoc[?]Glib%3A%3A\([^"]*\)!http://gtk2-perl.sourceforge.net/doc/pod/Glib/\1.html!'g \
+      -e 's!http://search.cpan.org/perldoc[?]Gtk2%3A%3AGdk%3A%3A\([^"%]*\)"!http://gtk2-perl.sourceforge.net/doc/pod/Gtk2/Gdk/\1.html"!'g \
+      -e 's!http://search.cpan.org/perldoc[?]Gtk2%3A%3A\([^"%]*\)"!http://gtk2-perl.sourceforge.net/doc/pod/Gtk2/\1.html"!'g \
+      -e 's!http://search.cpan.org/perldoc[?]AptPkg!http://packages.debian.org/libapt-pkg-perl!' \
+      -e 's!http://search.cpan.org/perldoc[?]apt-file!http://packages.debian.org/apt-file!'
+
+HERE
+    if (my $munghtml_extra = $makemaker->{'MY_MUNGHTML_EXTRA'}) {
+      $post =~ s/apt-file!'/apt-file!'\\
+$munghtml_extra/;
+    }
+
+    my @pmfiles = keys %{$makemaker->{'PM'}};
+    @pmfiles = grep {!/\.mo$/} @pmfiles; # not LocaleData .mo files
+    my @exefiles = (defined $makemaker->{'EXE_FILES'}
+                    ? @{$makemaker->{'EXE_FILES'}}
+                    : ());
+    my %html_files;
+
+    foreach my $pm (@exefiles, @pmfiles) {
+      my $fullhtml = $pm;
+      $fullhtml =~ s{lib/}{};     # remove lib/
+      $fullhtml =~ s{\.p[ml]$}{}; # remove .pm or .pl
+      $fullhtml .= '.html';
+      my $parthtml = $fullhtml;
+
+      $fullhtml =~ s{/}{-}g;      # so Foo-Bar.html
+      unless ($html_files{$fullhtml}++) {
+        $post .= <<"HERE";
+$fullhtml: $pm Makefile
+	\$(MY_POD2HTML) $pm \\
+	  | \$(MY_MUNGHTML) >$fullhtml
+HERE
+      }
+      $parthtml =~ s{.*/}{};      # remove any directory part, just Bar.html
+      unless ($html_files{$parthtml}++) {
+        $post .= <<"HERE";
+$parthtml: $pm Makefile
+	\$(MY_POD2HTML) $pm \\
+	  | \$(MY_MUNGHTML) >$parthtml
+HERE
+      }
+    }
+
+    $post .= "MY_HTML_FILES = " . join(' ', keys %html_files) . "\n";
+    $post .= <<'HERE';
+html: $(MY_HTML_FILES)
+HERE
+  }
+
+  $post .= <<'HERE';
+
 #------------------------------------------------------------------------------
 # development stuff -- from inc/MyMakeMakerExtras.pm
 
+version:
+	$(NOECHO)$(ECHO) $(VERSION)
+
 HERE
 
-  my $lint_files = $makemaker->{'MyMakeMakerExtras_LINT_FILES'};
+  my $lint_files = $my_options{'MyMakeMakerExtras_LINT_FILES'};
   if (! defined $lint_files) {
-    $lint_files = '$(EXE_FILES) $(TO_INST_PM) t/*.t';
+    $lint_files = '$(EXE_FILES) $(TO_INST_PM)';
+    # would prefer not to lock down the 't' dir existance at ./Makefile.PL
+    # time, but it's a bit hard without without GNU make extensions
+    if (-d 't') { $lint_files .= ' t/*.t'; }
+
     foreach my $dir ('examples', 'devel') {
       my $pattern = "$dir/*.pl";
       if (glob ($pattern)) {
@@ -42,8 +220,9 @@ HERE
   }
 
   my $podcoverage = '';
-  foreach my $class (@{$makemaker->{'MyMakeMakerExtras_Pod_Coverage'}}) {
-    $podcoverage .= "\t-perl -e 'use Pod::Coverage package=>$class'\n";
+  foreach my $class (@{$my_options{'MyMakeMakerExtras_Pod_Coverage'}}) {
+    # the "." obscures it from MyExtractUse.pm
+    $podcoverage .= "\t-perl -e 'use "."Pod::Coverage package=>$class'\n";
   }
 
   $post .= "LINT_FILES = $lint_files\n"
@@ -52,6 +231,7 @@ lint:
 	perl -MO=Lint $(LINT_FILES)
 pc:
 HERE
+  # "podchecker -warnings -warnings" too much reporting every < and >
   $post .= $podcoverage . <<'HERE';
 	-podchecker $(LINT_FILES)
 	perlcritic $(LINT_FILES)
@@ -68,17 +248,19 @@ myman:
 
 # find files in the dist with mod times this year, but without this year in
 # the copyright line
-copyright-years-check:
+check-copyright-years:
 	year=`date +%Y`; \
 	tar tvfz $(DISTVNAME).tar.gz \
-	| egrep '$$year-|debian/copyright' \
+	| egrep "$$year-|debian/copyright" \
 	| sed 's:^.*$(DISTVNAME)/::' \
 	| (result=0; \
 	  while read i; do \
 	    case $$i in \
 	      '' | */ \
-	      | debian/changelog | debian/compat \
-	      | COPYING | MANIFEST* | SIGNATURE | META.yml) \
+	      | debian/changelog | debian/compat | debian/doc-base \
+	      | COPYING | MANIFEST* | SIGNATURE | META.yml \
+	      | version.texi | */version.texi \
+	      | *.mo | *.locatedb | samp.*) \
 	      continue ;; \
 	    esac; \
 	    if test -e "$(srcdir)/$$i"; then f="$(srcdir)/$$i"; \
@@ -93,8 +275,13 @@ copyright-years-check:
 
 # only a non-zero number is bad, allow an expression to copy a debug from
 # another package
-debug-constants-check:
+check-debug-constants:
 	if egrep -n 'DEBUG => [1-9]' $(EXE_FILES) $(TO_INST_PM); then exit 1; else exit 0; fi
+
+check-spelling:
+	if egrep -nHi 'existant|explict|agument|destionation|\bthe the\b|\bnote sure\b' -r . \
+	  | egrep -v '(MyMakeMakerExtras|Makefile|dist-deb).*grep -nH'; \
+	then false; else true; fi
 
 diff-prev:
 	rm -rf diff.tmp
@@ -107,21 +294,33 @@ diff-prev:
 	-$${PAGER:-less} diff.tmp/tree.diff
 	rm -rf diff.tmp
 
+# in a hash-style multi-const this "use constant" pattern only picks up the
+# first constant, unfortunately, but it's better than nothing
 TAG_FILES = $(TO_INST_PM)
 TAGS: $(TAG_FILES)
-	etags $(TAG_FILES)
+	etags \
+	  --regex='{perl}/use[ \t]+constant\(::defer\)?[ \t]+\({[ \t]*\)?\([A-Za-z_][^ \t=,;]+\)/\3/' \
+	  $(TAG_FILES)
 
 HERE
 
+  my $have_XS = scalar %{$makemaker->{'XS'}};
+  my $arch = ($have_XS
+              ? `dpkg --print-architecture`
+              : 'all');
+  chomp($arch);
   my $debname = (defined $makemaker->{'EXE_FILES'}
                  ? '$(DISTNAME)'
                  : "\Llib$makemaker->{'DISTNAME'}-perl");
-  $post .= "DEBNAME = $debname\n" . <<'HERE';
+  $post .=
+    "DEBNAME = $debname\n"
+    . "DPKG_ARCH = $arch\n"
+    . <<'HERE';
 DEBVNAME = $(DEBNAME)_$(VERSION)-1
-DEBFILE = $(DEBVNAME)_all.deb
+DEBFILE = $(DEBVNAME)_$(DPKG_ARCH).deb
 
 # ExtUtils::MakeMaker 6.42 of perl 5.10.0 makes "$(DISTVNAME).tar.gz" depend
-# on "$(DISTVNAME)" distdir directory, which is always non-existant after a
+# on "$(DISTVNAME)" distdir directory, which is always non-existent after a
 # successful dist build, so the .tar.gz is always rebuilt.
 #
 # So although the .deb depends on the .tar.gz don't express that here or it
@@ -136,7 +335,10 @@ DEBFILE = $(DEBVNAME)_all.deb
 # warnings and possible failures from Test::NoWarnings.
 #
 $(DEBFILE) deb:
-	test -f $(DISTVNAME).tar.gz
+	test -f $(DISTVNAME).tar.gz || $(MAKE) $(DISTVNAME).tar.gz
+	debver="`dpkg-parsechangelog -c1 | sed -n -r -e 's/^Version: (.*)-[0-9.]+$$/\1/p'`"; \
+	  echo "debver $$debver", want $(VERSION); \
+	  test "$$debver" = "$(VERSION)"
 	rm -rf $(DISTVNAME)
 	tar xfz $(DISTVNAME).tar.gz
 	unset DISPLAY; export DISPLAY; \
