@@ -23,7 +23,7 @@ use Carp;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 5;
+our $VERSION = 6;
 
 sub new {
   my ($class, $object, @ids) = @_;
@@ -171,19 +171,18 @@ to SignalIds to look after. Eg.
 
 =item C<< $sigids->add ($id1, $id2, ...) >>
 
-Add further signal IDs to C<$sigids> for the C<$object>.  This is good if a
-further connection is made later on, or only conditionally.
+Add further signal IDs to C<$sigids> for the C<$object>.  This is good for a
+further connection later on, or only conditionally.
 
     my $sigids = Glib::Ex::SignalIds->new ($obj);
     $sigids->add ($obj->signal_connect (foo => \&do_foo));
     $sigids->add ($obj->signal_connect (bar => \&do_bar));
 
 Adding IDs one by one is good if one of the C<signal_connect> calls might
-error out.  If so the previous connections are safely in the C<$sigids> and
-will be cleaned up, whereas in a multiple-ID call some could leak on an
-error.  An error making a connection is unlikely, but worth bearing in mind
-if for instance the signal name comes in externally, or the object class
-hasn't been checked.
+error out.  Any previous connections are safely in the C<$sigids> and will
+be cleaned up, whereas in a multiple-ID call some could leak on an error.
+An error making a connection is unlikely, unless perhaps the signal name
+comes in externally, or the target object class hasn't been checked.
 
 =item C<< $object = $sigids->object() >>
 

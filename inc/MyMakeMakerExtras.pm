@@ -142,13 +142,7 @@ sub postamble {
 #------------------------------------------------------------------------------
 # docs stuff -- from inc/MyMakeMakerExtras.pm
 
-MY_POD2HTML = perl -MPod::Simple::HTML -e Pod::Simple::HTML::go
-MY_MUNGHTML = \
-  sed -e 's!http://search.cpan.org/perldoc[?]Glib%3A%3A\([^"]*\)!http://gtk2-perl.sourceforge.net/doc/pod/Glib/\1.html!'g \
-      -e 's!http://search.cpan.org/perldoc[?]Gtk2%3A%3AGdk%3A%3A\([^"%]*\)"!http://gtk2-perl.sourceforge.net/doc/pod/Gtk2/Gdk/\1.html"!'g \
-      -e 's!http://search.cpan.org/perldoc[?]Gtk2%3A%3A\([^"%]*\)"!http://gtk2-perl.sourceforge.net/doc/pod/Gtk2/\1.html"!'g \
-      -e 's!http://search.cpan.org/perldoc[?]AptPkg!http://packages.debian.org/libapt-pkg-perl!' \
-      -e 's!http://search.cpan.org/perldoc[?]apt-file!http://packages.debian.org/apt-file!'
+MY_POD2HTML = $(PERL) inc/my_pod2html
 
 HERE
     if (my $munghtml_extra = $makemaker->{'MY_MUNGHTML_EXTRA'}) {
@@ -174,16 +168,14 @@ $munghtml_extra/;
       unless ($html_files{$fullhtml}++) {
         $post .= <<"HERE";
 $fullhtml: $pm Makefile
-	\$(MY_POD2HTML) $pm \\
-	  | \$(MY_MUNGHTML) >$fullhtml
+	\$(MY_POD2HTML) $pm >$fullhtml
 HERE
       }
       $parthtml =~ s{.*/}{};      # remove any directory part, just Bar.html
       unless ($html_files{$parthtml}++) {
         $post .= <<"HERE";
 $parthtml: $pm Makefile
-	\$(MY_POD2HTML) $pm \\
-	  | \$(MY_MUNGHTML) >$parthtml
+	\$(MY_POD2HTML) $pm >$parthtml
 HERE
       }
     }
@@ -258,6 +250,7 @@ check-copyright-years:
 	    case $$i in \
 	      '' | */ \
 	      | debian/changelog | debian/compat | debian/doc-base \
+	      | debian/patches/*.diff \
 	      | COPYING | MANIFEST* | SIGNATURE | META.yml \
 	      | version.texi | */version.texi \
 	      | *.mo | *.locatedb | samp.*) \

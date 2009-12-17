@@ -22,7 +22,7 @@ use 5.008;
 use strict;
 use warnings;
 use Glib::Ex::SourceIds;
-use Test::More tests => 15;
+use Test::More tests => 18;
 
 use FindBin;
 use File::Spec;
@@ -42,7 +42,7 @@ sub do_idle {
 
 # version number
 {
-  my $want_version = 5;
+  my $want_version = 6;
   ok ($Glib::Ex::SourceIds::VERSION >= $want_version, 'VERSION variable');
   ok (Glib::Ex::SourceIds->VERSION  >= $want_version, 'VERSION class method');
   ok (eval { Glib::Ex::SourceIds->VERSION($want_version); 1 },
@@ -50,8 +50,7 @@ sub do_idle {
   ok (! eval { Glib::Ex::SourceIds->VERSION($want_version + 1000); 1 },
       "VERSION class check " . ($want_version + 1000));
 
-  my $ids = Glib::Ex::SourceIds->new (Glib::Idle->add (\&do_idle));
-
+  my $ids = Glib::Ex::SourceIds->new;
   ok ($ids->VERSION >= $want_version, 'VERSION object method');
   ok (eval { $ids->VERSION($want_version); 1 },
       "VERSION object check $want_version");
@@ -66,7 +65,7 @@ sub do_idle {
   require Scalar::Util;
   Scalar::Util::weaken ($ids);
   is ($ids, undef,
-      'destroyed when weakened');
+      'SourceIds destroyed when weakened');
   ok (! Glib::Source->remove ($id),
       'held source disconnected by destroy');
 }
@@ -79,11 +78,27 @@ sub do_idle {
   require Scalar::Util;
   Scalar::Util::weaken ($ids);
   is ($ids, undef,
-      'destroyed when weakened');
+      'SourceIds destroyed when weakened');
   ok (! Glib::Source->remove ($id1),
       'id1 disconnected by destroy');
   ok (! Glib::Source->remove ($id2),
       'id2 disconnected by destroy');
+}
+
+# two by add()
+{
+  my $id1 = Glib::Idle->add (\&do_idle);
+  my $id2 = Glib::Idle->add (\&do_idle);
+  my $ids = Glib::Ex::SourceIds->new;
+  $ids->add ($id1, $id2);
+  require Scalar::Util;
+  Scalar::Util::weaken ($ids);
+  is ($ids, undef,
+      'add()ed SourceIds destroyed when weakened');
+  ok (! Glib::Source->remove ($id1),
+      'add()ed id1 disconnected by destroy');
+  ok (! Glib::Source->remove ($id2),
+      'add()ed id2 disconnected by destroy');
 }
 
 # SourceIds can cope if held ID is disconnected elsewhere

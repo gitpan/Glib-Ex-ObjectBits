@@ -69,7 +69,7 @@ use warnings;
 
 # version number
 {
-  my $want_version = 5;
+  my $want_version = 6;
   ok ($Glib::Ex::FreezeNotify::VERSION >= $want_version,
       'VERSION variable');
   ok (Glib::Ex::FreezeNotify->VERSION  >= $want_version,

@@ -36,7 +36,7 @@ MyTestHelpers::glib_gtk_versions();
 
 # version number
 {
-  my $want_version = 5;
+  my $want_version = 6;
   ok ($Glib::Ex::SignalIds::VERSION >= $want_version, 'VERSION variable');
   ok (Glib::Ex::SignalIds->VERSION  >= $want_version, 'VERSION class method');
   ok (eval { Glib::Ex::SignalIds->VERSION($want_version); 1 },

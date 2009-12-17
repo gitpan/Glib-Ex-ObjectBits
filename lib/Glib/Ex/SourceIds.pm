@@ -20,13 +20,18 @@ use 5.008;
 use strict;
 use warnings;
 use Glib;
-use Scalar::Util;
 
-our $VERSION = 5;
+our $VERSION = 6;
 
 sub new {
   my ($class, @ids) = @_;
-  return bless \@ids, $class;
+  my $self = bless [], $class;
+  $self->add (@ids);
+  return $self;
+}
+sub add {
+  my ($self, @ids) = @_;
+  push @$self, @ids;
 }
 
 sub DESTROY {
@@ -34,9 +39,9 @@ sub DESTROY {
   $self->remove;
 }
 
-# g_source_remove() returns false if it didn't find the ID, so no need for
-# any check here whether it's already removed (for instance by a false
-# return from the handler function).
+# g_source_remove() returns false if it didn't find the ID, so no need to
+# check whether it's already removed (for instance by a false return from
+# the handler function).
 #
 sub remove {
   my ($self) = @_;
@@ -55,17 +60,17 @@ Glib::Ex::SourceIds -- hold Glib main loop source IDs
 =head1 SYNOPSIS
 
  use Glib::Ex::SourceIds;
- my $ids = Glib::Ex::SourceIds->new
-             (Glib::Timeout->add (1000, \&do_timer),
-              Glib::Idle->add (\&do_idle));
+ my $sourceids = Glib::Ex::SourceIds->new
+                    (Glib::Timeout->add (1000, \&do_timer),
+                     Glib::Idle->add (\&do_idle));
 
  # removed when ids object destroyed
- $ids = undef;
+ $sourceids = undef;
 
 =head1 DESCRIPTION
 
 C<Glib::Ex::SourceIds> holds a set of Glib main loop source IDs.  When the
-SourceIds is destroyed it removes those IDs.
+SourceIds object is destroyed it removes those IDs.
 
 This is designed to make life easier when keeping sources installed for a
 limited period, such as an IO watch while communicating on a socket, or a
@@ -76,7 +81,7 @@ C<Glib::Object> (or just a Perl object), though they don't have to be.
 
 =over 4
 
-=item C<< $sobj = Glib::Ex::SourceIds->new ($id,$id,...) >>
+=item C<< $sourceids = Glib::Ex::SourceIds->new ($id,$id,...) >>
 
 Create and return a SourceIds object holding the given C<$id> main loop
 source IDs (integers).
@@ -86,19 +91,34 @@ C<< Glib::Timeout->add >>, C<< Glib::IO->add_watch >> and
 C<< Glib::Idle->add >> in the usual ways and all the various options, then
 pass the resulting ID to SourceIds to look after.  Eg.
 
-    my $ids = Glib::Ex::SourceIds->new
-                (Glib::Timeout->add (1000, \&do_timer));
+    my $sourceids = Glib::Ex::SourceIds->new
+                      (Glib::Timeout->add (1000, \&do_timer));
 
 You can hold any number of IDs in a SourceIds object.  Generally if you want
 things installed and removed at different points in the program then you'll
 use separate SourceIds objects for each (or each group).
 
-=item C<< $ids->remove() >>
+=item C<< $sourceids->add ($id,$id,...) >>
 
-Remove the source IDs held in C<$ids> from the main loop, using
+Add the given C<$id> main loop source IDs (integers) to SourceIds object
+C<$sourceids>.  This can be used for IDs created separately from a C<new>
+call.
+
+    $sourceids->add (Glib::Timeout->add (1000, \&do_timer));
+
+Adding IDs one by one is good if the code might error out.  IDs previously
+connected are safely tucked away in the SourceIds and will be disconnect as
+the error unwinds.  An error in a simple connection is unlikely, but if for
+instance the "condition" flags for an C<add_watch> came from some external
+code then they could be invalid.
+
+=item C<< $sourceids->remove() >>
+
+Remove the source IDs held in C<$sourceids> from the main loop, using
 C<< Glib::Source->remove >>, if not already removed (for instance by a
-"false" return from the handler code).  This remove is done when C<$ids> is
-garbage collected, but you can do it explicitly sooner if desired.
+"false" return from the handler code).  This remove is done when
+C<$sourceids> is garbage collected, but you can do it explicitly sooner if
+desired.
 
 =back
 

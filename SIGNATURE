@@ -15,13 +15,13 @@ not run its Makefile.PL or Build.PL.
 Hash: SHA1
 
 SHA1 842745cb706f8f2126506f544492f7a80dbe29b3 COPYING
-SHA1 5d7038fccc003c24a14247607046459a66e2991e Changes
-SHA1 72429c932d15a2642ff538ba809a5e3f600af300 MANIFEST
+SHA1 afcfae674ccbfe8e328e6d522d56097b0d60fc0a Changes
+SHA1 d1aefcbab4a9a1e364af6506258482e1dbfcd16c MANIFEST
 SHA1 bb78fa7bf2dfebdda59c9efb64db51b173fb9e2f MANIFEST.SKIP
-SHA1 9003e9abcac6460062eb969eb516ee65e3ccf5b6 META.yml
+SHA1 d328073205b8d7a70cfbb5526ec3ebf14599fbc6 META.yml
 SHA1 4c5e50d0e199e2287eac0d9e15366894b28c2cce Makefile.PL
 SHA1 aea14a529977e9cb395f110e57c97a967483772a README
-SHA1 a06104e5a9935c4eabe398ec7e1bdbd29301a53b debian/changelog
+SHA1 4ebee9c504438d43fa1d28c3f7af3791976e66c1 debian/changelog
 SHA1 ac3478d69a3c81fa62e60f5c3696165a4e5e6ac4 debian/compat
 SHA1 b6e009b87e68e6c79c63e7b05db37d45fa422ea5 debian/control
 SHA1 af4476c4b0fbe2d9f377d3670b7929b4682c9ff8 debian/copyright
@@ -30,27 +30,28 @@ SHA1 e2e3436c7bdeb56c020c572192e2e38d337b1607 debian/watch
 SHA1 80faf764f5a589a9913e7718bfeebca81cfa67ec devel/SignalHookIds.pm
 SHA1 605f6e62d3be55b4c3be3d47d36489bfdc81db13 devel/tie-one.pl
 SHA1 814dfb992fa8689b85ac48576739e9f5b67aa829 devel/tie-properties.pl
-SHA1 994057e0defa4d28cbfdba1c4949ce6272b463b6 inc/MyMakeMakerExtras.pm
-SHA1 8abe77ce19ad5175c08fe5e8d515518296acac90 lib/Glib/Ex/FreezeNotify.pm
-SHA1 cb7381d40206cedc79b6e25ee1c5ae508a4050f3 lib/Glib/Ex/SignalIds.pm
-SHA1 debbbe458d8b94c47276b26f2117d49acc2ac0f5 lib/Glib/Ex/SourceIds.pm
-SHA1 724ea461023e3271beac9cd421915b8c4a82e0f4 lib/Glib/Ex/TieProperties.pm
+SHA1 48a1d73cde54ae5d13f4fe03f98ce679820339dd inc/MyMakeMakerExtras.pm
+SHA1 a5ba911a284925d29e7e96d2e15912ea84259bab inc/my_pod2html
+SHA1 c047bbfd2cdbdbf961e37036da51cadb5da59a6d lib/Glib/Ex/FreezeNotify.pm
+SHA1 9edb1626b674252f6bea8d16784b4f3c313a360b lib/Glib/Ex/SignalIds.pm
+SHA1 da9695d80ebc2adfa3541c353b4da75259e2979c lib/Glib/Ex/SourceIds.pm
+SHA1 cd57b5192742317f683b55dbca138f2abbbb0931 lib/Glib/Ex/TieProperties.pm
 SHA1 378b932305fb60823467c2af3c771fe3fc295a13 t/0-META-read.t
 SHA1 a343ed4dce96d05de51eed1ec065911584b96fce t/0-Test-DistManifest.t
 SHA1 bba0dc087cbe64d8f100ab77e6cef061c0bebf27 t/0-Test-Pod.t
 SHA1 5fa94e1e88e44064d1e6b21c88a4c9374a17bfd1 t/0-Test-Synopsis.t
 SHA1 d369522d8a9a887fdf1a1e14cb83e25fa2188727 t/0-Test-YAML-Meta.t
-SHA1 8b697071316a0bc782e7659fa1381fe4d5bb3dc0 t/FreezeNotify.t
-SHA1 a250e53d16e83317add66840739d82891eec65de t/SignalIds.t
-SHA1 5d640d4832b21be620940233dfec5e306a692f61 t/SourceIds.t
+SHA1 5bd7619aa38fda2e8dee9def3fbb8cbd6cb86575 t/FreezeNotify.t
+SHA1 640d78ebd27119a45a2d8ee9d1949e091c3c6ee2 t/SignalIds.t
+SHA1 7dc8346c4de66cb72da2e98b0fc0764bc71686c7 t/SourceIds.t
 SHA1 7b13e0bd547f0371bcb9a74d01a4abce84773b56 t/TieProperties-test-weaken.t
-SHA1 93b8bdd3b086dc1a13b5a539b2998131f5dd5f6a t/TieProperties.t
-SHA1 7e65c1ad5410e42561d9864258715047b760a89a t/inc/MyTestHelpers.pm
-SHA1 624f2ce0737bca05c6e0023d764115b43eee4eed t/inc/Test/Weaken/Gtk2.pm
+SHA1 a2587fd43defb5691cb6266881ee44afd8fd37c7 t/TieProperties.t
+SHA1 35a862fbf071904203ad14b042e2ec60c76bd13f t/inc/MyTestHelpers.pm
+SHA1 6aad0e60f2a7061d19062d5f0ec3777513bf6e59 t/inc/Test/Weaken/Gtk2.pm
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.10 (GNU/Linux)
 
-iD8DBQFLIrz0LFMCIV9q3ToRAga+AKC0PoNbKqZuazi6CS/f8No9ZDKhQACeNdS4
-kDoc2th9nAUhPBkZYAZ4TK8=
-=a+Ij
+iD8DBQFLKqG0LFMCIV9q3ToRAj27AKCI88bk6M5GsSrdGZdpBG0IvizBHACgnP55
+J5F1WQ0Qu5DpCDDNwk72sqQ=
+=wTFD
 -----END PGP SIGNATURE-----

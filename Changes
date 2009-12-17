@@ -16,8 +16,11 @@ You should have received a copy of the GNU General Public License along
 with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 6, December 2009
+	- SourceIds new add() method
+
 Version 5, December 2009
-	- document SignalIds add() method
+	- SignalIds document add() method
 
 Version 4, July 2009
 	- SignalIds new ids() accessor

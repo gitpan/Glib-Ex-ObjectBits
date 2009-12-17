@@ -23,7 +23,7 @@ use Carp;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 5;
+our $VERSION = 6;
 
 # set this to 1 for some diagnostic prints
 use constant DEBUG => 0;

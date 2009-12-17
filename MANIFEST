@@ -9,6 +9,7 @@ debian/watch
 devel/SignalHookIds.pm
 devel/tie-one.pl
 devel/tie-properties.pl
+inc/my_pod2html
 inc/MyMakeMakerExtras.pm
 lib/Glib/Ex/FreezeNotify.pm
 lib/Glib/Ex/SignalIds.pm

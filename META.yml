@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Glib-Ex-ObjectBits
-version:            5
+version:            6
 abstract:           Helpers for Glib objects.
 author:
     - Kevin Ryde <user42@zip.com.au>
