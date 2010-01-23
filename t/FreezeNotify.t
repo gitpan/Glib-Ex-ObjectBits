@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2008, 2009 Kevin Ryde
+# Copyright 2008, 2009, 2010 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -69,10 +69,10 @@ use warnings;
 
 # version number
 {
-  my $want_version = 6;
-  ok ($Glib::Ex::FreezeNotify::VERSION >= $want_version,
+  my $want_version = 7;
+  is ($Glib::Ex::FreezeNotify::VERSION, $want_version,
       'VERSION variable');
-  ok (Glib::Ex::FreezeNotify->VERSION  >= $want_version,
+  is (Glib::Ex::FreezeNotify->VERSION, $want_version,
       'VERSION class method');
   ok (eval { Glib::Ex::FreezeNotify->VERSION($want_version); 1 },
       "VERSION class check $want_version");
@@ -82,7 +82,7 @@ use warnings;
   my $obj = Foo->new;
   my $freezer = Glib::Ex::FreezeNotify->new ($obj);
 
-  ok ($freezer->VERSION >= $want_version, 'VERSION object method');
+  is ($freezer->VERSION, $want_version, 'VERSION object method');
   ok (eval { $freezer->VERSION($want_version); 1 },
       "VERSION object check $want_version");
   ok (! eval { $freezer->VERSION($want_version + 1000); 1 },

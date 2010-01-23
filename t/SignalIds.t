@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2008, 2009 Kevin Ryde
+# Copyright 2008, 2009, 2010 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -36,9 +36,9 @@ MyTestHelpers::glib_gtk_versions();
 
 # version number
 {
-  my $want_version = 6;
-  ok ($Glib::Ex::SignalIds::VERSION >= $want_version, 'VERSION variable');
-  ok (Glib::Ex::SignalIds->VERSION  >= $want_version, 'VERSION class method');
+  my $want_version = 7;
+  is ($Glib::Ex::SignalIds::VERSION, $want_version, 'VERSION variable');
+  is (Glib::Ex::SignalIds->VERSION,  $want_version, 'VERSION class method');
   ok (eval { Glib::Ex::SignalIds->VERSION($want_version); 1 },
       "VERSION class check $want_version");
   ok (! eval { Glib::Ex::SignalIds->VERSION($want_version + 1000); 1 },
@@ -48,7 +48,7 @@ MyTestHelpers::glib_gtk_versions();
   my $sigs = Glib::Ex::SignalIds->new
     ($obj, $obj->signal_connect (notify => sub {}));
 
-  ok ($sigs->VERSION >= $want_version, 'VERSION object method');
+  is ($sigs->VERSION, $want_version, 'VERSION object method');
   ok (eval { $sigs->VERSION($want_version); 1 },
       "VERSION object check $want_version");
   ok (! eval { $sigs->VERSION($want_version + 1000); 1 },
@@ -154,7 +154,7 @@ package main;
   my $obj = MyClass->new;
   my $id = 0;
   my $sigs = Glib::Ex::SignalIds->new ($obj, $id);
-  diag explain $sigs;
+  if (defined &explain) { diag explain $sigs; }
   $sigs->disconnect;
 }
 

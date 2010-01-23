@@ -1,4 +1,4 @@
-# MyMakeMakerExtras.pm -- my shared MakeMaker extras
+# MyMakeMakerExtra.pm -- my shared MakeMaker extras
 
 # Copyright 2009 Kevin Ryde
 
@@ -75,6 +75,10 @@ sub _meta_merge_shared_tests {
   if (-e 't/0-Test-DistManifest.t') {
     _meta_merge_req_add (_meta_merge_maximum_tests($opts),
                          'Test::DistManifest' => 0);
+  }
+  if (-e 't/0-Test-Synopsis.t') {
+    _meta_merge_req_add (_meta_merge_maximum_tests($opts),
+                         'Test::Synopsis' => 0);
   }
   if (-e 't/0-Test-YAML-Meta.t') {
     _meta_merge_req_add (_meta_merge_maximum_tests($opts),
@@ -253,7 +257,7 @@ check-copyright-years:
 	      | debian/patches/*.diff \
 	      | COPYING | MANIFEST* | SIGNATURE | META.yml \
 	      | version.texi | */version.texi \
-	      | *.mo | *.locatedb | samp.*) \
+	      | *.mo | *.locatedb | t/samp.*) \
 	      continue ;; \
 	    esac; \
 	    if test -e "$(srcdir)/$$i"; then f="$(srcdir)/$$i"; \

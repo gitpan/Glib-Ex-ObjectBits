@@ -95,7 +95,7 @@ package main;
        return [ $h, $obj ];
      });
   is ($leaks, undef, 'deep garbage collection');
-  if ($leaks) {
+  if ($leaks && defined &explain) {
     diag "Test-Weaken ", explain $leaks;
   }
 }

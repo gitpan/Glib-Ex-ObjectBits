@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2009 Kevin Ryde
+# Copyright 2009, 2010 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -93,11 +93,11 @@ my %want_props = ('myprop-one' => 1,
 
 my $gobject_has_properties = defined ((Glib::Object->list_properties)[0]);
 
-my $want_version = 6;
+my $want_version = 7;
 {
-  ok ($Glib::Ex::TieProperties::VERSION >= $want_version,
+  is ($Glib::Ex::TieProperties::VERSION, $want_version,
       'VERSION variable');
-  ok (Glib::Ex::TieProperties->VERSION  >= $want_version,
+  is (Glib::Ex::TieProperties->VERSION, $want_version,
       'VERSION class method');
   ok (eval { Glib::Ex::TieProperties->VERSION($want_version); 1 },
       "VERSION class check $want_version");
@@ -117,7 +117,7 @@ diag "using tie()";
 
   # tobj VERSION
   {
-    ok ($tobj->VERSION >= $want_version, 'VERSION object method');
+    is ($tobj->VERSION, $want_version, 'VERSION object method');
     ok (eval { $tobj->VERSION($want_version); 1 },
         "VERSION object check $want_version");
     my $check_version = $want_version + 1000;

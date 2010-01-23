@@ -73,7 +73,7 @@ sub main_iterations {
 
 # Eg,
 #     my $something = do {
-#       local $SIG{'__WARN__'} = \&warn_suppress_gtk_icon;
+#       local $SIG{'__WARN__'} = \&MyTestHelpers::warn_suppress_gtk_icon;
 #       SomeThing->new;
 #     };
 #
