@@ -16,6 +16,10 @@ You should have received a copy of the GNU General Public License along
 with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 8, January 2010
+	- test script fix, SignalIds doesn't actually have anything
+	  id==0 and attempting that provokes a g_assert() in glib 2.4
+
 Version 7, January 2010
 	- test script fix, explain() only in new enough Test::More
 

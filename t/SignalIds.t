@@ -36,7 +36,7 @@ MyTestHelpers::glib_gtk_versions();
 
 # version number
 {
-  my $want_version = 7;
+  my $want_version = 8;
   is ($Glib::Ex::SignalIds::VERSION, $want_version, 'VERSION variable');
   is (Glib::Ex::SignalIds->VERSION,  $want_version, 'VERSION class method');
   ok (eval { Glib::Ex::SignalIds->VERSION($want_version); 1 },
@@ -45,9 +45,7 @@ MyTestHelpers::glib_gtk_versions();
       "VERSION class check " . ($want_version + 1000));
 
   my $obj = MyClass->new;
-  my $sigs = Glib::Ex::SignalIds->new
-    ($obj, $obj->signal_connect (notify => sub {}));
-
+  my $sigs = Glib::Ex::SignalIds->new ($obj);
   is ($sigs->VERSION, $want_version, 'VERSION object method');
   ok (eval { $sigs->VERSION($want_version); 1 },
       "VERSION object check $want_version");
@@ -58,17 +56,18 @@ MyTestHelpers::glib_gtk_versions();
 
 #------------------------------------------------------------------------------
 
-package MyClass;
-use Glib;
-use Glib::Object::Subclass
-  Glib::Object::,
-  properties => [ Glib::ParamSpec->int
-                  ('myprop',
-                   'myprop',
-                   'Blurb',
-                   0, 100, 50,
-                   Glib::G_PARAM_READWRITE) ];
-package main;
+{
+  package MyClass;
+  use Glib;
+  use Glib::Object::Subclass
+    Glib::Object::,
+        properties => [ Glib::ParamSpec->int
+                        ('myprop',
+                         'myprop',
+                         'Blurb',
+                         0, 100, 50,
+                         Glib::G_PARAM_READWRITE) ];
+}
 
 #------------------------------------------------------------------------------
 # new and DESTROY
@@ -148,15 +147,23 @@ package main;
   $sigs->disconnect;
 }
 
-# SignalIds can cope with 0 return from unknown signal name
-{
-  diag "when id==0 from unknown signal name";
-  my $obj = MyClass->new;
-  my $id = 0;
-  my $sigs = Glib::Ex::SignalIds->new ($obj, $id);
-  if (defined &explain) { diag explain $sigs; }
-  $sigs->disconnect;
-}
+# No, nothing in disconnect() to handle id==0.  Could think about something
+# in new()/add() to keep them out in the first place, but a wrong signal
+# name provokes a glib warning, leave that to the application to get it
+# right.
+#
+# In Glib 2.22.4 signal_handler_is_connected() quietly says false for id==0,
+# but back in Glib 2.4 it provoked a g_assert warning.
+#
+# # SignalIds can cope with 0 return from unknown signal name
+# {
+#   diag "when id==0 from unknown signal name";
+#   my $obj = MyClass->new;
+#   my $id = 0;
+#   my $sigs = Glib::Ex::SignalIds->new ($obj, $id);
+#   if (defined &explain) { diag explain $sigs; }
+#   $sigs->disconnect;
+# }
 
 eval { Glib::Ex::SignalIds->new (123); };
 ok ($@, 'notice number as first arg');

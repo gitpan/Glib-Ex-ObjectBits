@@ -21,7 +21,7 @@ use strict;
 use warnings;
 use Glib;
 
-our $VERSION = 7;
+our $VERSION = 8;
 
 sub new {
   my ($class, @ids) = @_;

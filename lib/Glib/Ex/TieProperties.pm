@@ -23,7 +23,7 @@ use warnings;
 use Carp;
 use Glib;
 
-our $VERSION = 7;
+our $VERSION = 8;
 
 use constant DEBUG => 0;
 

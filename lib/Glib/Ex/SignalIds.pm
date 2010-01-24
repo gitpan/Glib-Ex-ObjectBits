@@ -23,7 +23,7 @@ use Carp;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 7;
+our $VERSION = 8;
 
 sub new {
   my ($class, $object, @ids) = @_;
@@ -104,9 +104,10 @@ when switching to a different target.
 
 =head2 Target Object Usage
 
-A typical use is connecting to signals on a target object set into a
-property, like a C<Gtk2::TreeModel> in a viewer, or a C<Gtk2::Adjustment>
-for scrolling.  The C<SET_PROPERTY> in your new class might look like
+A typical use is connecting to signals on a target object which is in one of
+your properties.  For example a C<Gtk2::TreeModel> target in a viewer, or a
+C<Gtk2::Adjustment> for scrolling.  The C<SET_PROPERTY> in your new class
+might look like
 
     sub SET_PROPERTY {
       my ($self, $pspec, $newval) = @_;
@@ -125,16 +126,16 @@ for scrolling.  The C<SET_PROPERTY> in your new class might look like
     }
 
 The C<$model &&> part allows C<undef> for no model, in which case the
-C<model_ids> becomes undef.  Either way any previous SignalIds object in
-C<model_ids> is discarded and so disconnects the previous model.  (Note in
-the signal user data you won't want C<$self> but something weakened, to
-avoid a circular reference, the same as for all signal connections.)
+C<model_ids> becomes undef.  Any previous SignalIds object in C<model_ids>
+is discarded and thus disconnects the previous model.  (In real code you
+won't want C<$self> in the signal user data, but something weakened to avoid
+a circular reference, the same as for all signal connections.)
 
 The key to this kind of usage is that the target object might change and you
 want a convenient way to connect to the new and disconnect from the old.  If
-however a sub-object or sub-widget belongs exclusively to you, never
+instead a sub-object or sub-widget belongs exclusively to you, never
 changes, and is destroyed at the same time as your object, then there's no
-need for disconnection and you won't need a SignalIds.
+need for disconnection and you don't need a SignalIds.
 
 =head2 Weakening
 
@@ -148,7 +149,7 @@ SignalIds knows no explicit disconnects are needed in that case.  SignalIds
 also knows some forms of weakening and Perl's "global destruction" phase can
 give slightly odd situations where the target object has disconnected its
 signals but Perl hasn't yet zapped references to the object.  For that
-reason SignalIds checks whether its IDs are still connected before
+reason SignalIds checks whether IDs are still connected before
 disconnecting, to avoid warnings from Glib.
 
 =head1 FUNCTIONS
@@ -171,18 +172,18 @@ to SignalIds to look after. Eg.
 
 =item C<< $sigids->add ($id1, $id2, ...) >>
 
-Add further signal IDs to C<$sigids> for the C<$object>.  This is good for a
-further connection later on, or only conditionally.
+Add further signal IDs to C<$sigids> for the C<$object>.  This can be a
+further connection made later on, or only conditionally.
 
     my $sigids = Glib::Ex::SignalIds->new ($obj);
     $sigids->add ($obj->signal_connect (foo => \&do_foo));
     $sigids->add ($obj->signal_connect (bar => \&do_bar));
 
 Adding IDs one by one is good if one of the C<signal_connect> calls might
-error out.  Any previous connections are safely in the C<$sigids> and will
-be cleaned up, whereas in a multiple-ID call some could leak on an error.
-An error making a connection is unlikely, unless perhaps the signal name
-comes in externally, or the target object class hasn't been checked.
+error out.  Previous connections are safely in the C<$sigids> and will be
+cleaned up, whereas in a multiple-ID call some could leak on an error.  An
+error making a connection is unlikely, unless perhaps the signal name comes
+in externally, or the target object class hasn't been checked.
 
 =item C<< $object = $sigids->object() >>
 
