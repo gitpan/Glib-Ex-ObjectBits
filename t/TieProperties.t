@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 # Copyright 2009, 2010 Kevin Ryde
 
@@ -23,9 +23,7 @@ use warnings;
 use Glib::Ex::TieProperties;
 use Test::More;
 
-use FindBin;
-use File::Spec;
-use lib File::Spec->catdir($FindBin::Bin,'inc');
+use lib 't';
 use MyTestHelpers;
 
 my $have_test_weaken = eval "use Test::Weaken 2.000; 1";
@@ -93,7 +91,7 @@ my %want_props = ('myprop-one' => 1,
 
 my $gobject_has_properties = defined ((Glib::Object->list_properties)[0]);
 
-my $want_version = 8;
+my $want_version = 9;
 {
   is ($Glib::Ex::TieProperties::VERSION, $want_version,
       'VERSION variable');

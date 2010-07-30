@@ -23,7 +23,7 @@ use Carp;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 8;
+our $VERSION = 9;
 
 sub new {
   my ($class, $object, @ids) = @_;
@@ -205,7 +205,9 @@ do it explicitly sooner if desired.
 
 =head1 SEE ALSO
 
-L<Glib::Object>, L<Glib::Ex::SourceIds>
+L<Glib::Object>,
+L<Glib::Ex::SourceIds>,
+L<Glib::Ex::SignalBits>
 
 =head1 HOME PAGE
 

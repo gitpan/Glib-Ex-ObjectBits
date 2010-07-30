@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 # Copyright 2008, 2009, 2010 Kevin Ryde
 
@@ -23,9 +23,7 @@ use warnings;
 use Glib::Ex::FreezeNotify;
 use Test::More tests => 24;
 
-use FindBin;
-use File::Spec;
-use lib File::Spec->catdir($FindBin::Bin,'inc');
+use lib 't';
 use MyTestHelpers;
 
 SKIP: { eval 'use Test::NoWarnings; 1'
@@ -69,7 +67,7 @@ use warnings;
 
 # version number
 {
-  my $want_version = 8;
+  my $want_version = 9;
   is ($Glib::Ex::FreezeNotify::VERSION, $want_version,
       'VERSION variable');
   is (Glib::Ex::FreezeNotify->VERSION, $want_version,

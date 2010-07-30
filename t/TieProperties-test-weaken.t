@@ -1,6 +1,6 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
-# Copyright 2009 Kevin Ryde
+# Copyright 2009, 2010 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -22,11 +22,8 @@ use warnings;
 use Glib::Ex::TieProperties;
 use Test::More;
 
-use FindBin;
-use File::Spec;
-use lib File::Spec->catdir($FindBin::Bin,'inc');
+use lib 't';
 use MyTestHelpers;
-use Test::Weaken::Gtk2;
 
 my $have_test_weaken = eval "use Test::Weaken 2.000; 1";
 if (! $have_test_weaken) {
