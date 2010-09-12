@@ -40,7 +40,7 @@ sub do_idle {
 
 # version number
 {
-  my $want_version = 9;
+  my $want_version = 10;
   is ($Glib::Ex::SourceIds::VERSION, $want_version, 'VERSION variable');
   is (Glib::Ex::SourceIds->VERSION,  $want_version, 'VERSION class method');
   ok (eval { Glib::Ex::SourceIds->VERSION($want_version); 1 },

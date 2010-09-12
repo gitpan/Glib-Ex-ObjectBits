@@ -41,42 +41,43 @@ MyTestHelpers::glib_gtk_versions();
 
 
 #-----------------------------------------------------------------------------
-package MyObject;
-use strict;
-use warnings;
-use Glib;
-use Glib::Object::Subclass
-  'Glib::Object',
-  properties => [Glib::ParamSpec->boolean
-                 ('myprop-one',
-                  'myprop-one',
-                  'Blurb.',
-                  0,
-                  Glib::G_PARAM_READWRITE),
 
-                 Glib::ParamSpec->boolean
-                 ('myprop-two',
-                  'myprop-two',
-                  'Blurb.',
-                  0,
-                  Glib::G_PARAM_READWRITE),
+{
+  package MyObject;
+  use strict;
+  use warnings;
+  use Glib;
+  use Glib::Object::Subclass
+    'Glib::Object',
+      properties => [Glib::ParamSpec->boolean
+                     ('myprop-one',
+                      'myprop-one',
+                      'Blurb.',
+                      0,
+                      Glib::G_PARAM_READWRITE),
 
-                 Glib::ParamSpec->double
-                 ('writeonly-double',
-                  'writeonly-double',
-                  'Blurb.',
-                  -1000, 1000, 111,
-                  ['writable']),
+                     Glib::ParamSpec->boolean
+                     ('myprop-two',
+                      'myprop-two',
+                      'Blurb.',
+                      0,
+                      Glib::G_PARAM_READWRITE),
 
-                 Glib::ParamSpec->float
-                 ('readonly-float',
-                  'readonly-float',
-                  'Blurb.',
-                  -2000, 2000, 222,
-                  ['readable']),
-                ];
+                     Glib::ParamSpec->double
+                     ('writeonly-double',
+                      'writeonly-double',
+                      'Blurb.',
+                      -1000, 1000, 111,
+                      ['writable']),
 
-package main;
+                     Glib::ParamSpec->float
+                     ('readonly-float',
+                      'readonly-float',
+                      'Blurb.',
+                      -2000, 2000, 222,
+                      ['readable']),
+                    ];
+}
 
 #-----------------------------------------------------------------------------
 # new()

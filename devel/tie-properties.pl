@@ -22,6 +22,30 @@ use strict;
 use warnings;
 use Glib::Ex::TieProperties;
 
+{
+  package My::Empty;
+  use Glib::Object::Subclass 'Glib::Object';
+}
+
+{
+  my %h;
+  print "plain hash scalar(h) empty: ",scalar(%h),"\n";
+  $h{1}=2;
+  print "plain hash scalar(h)   one: ",scalar(%h),"\n";
+
+  my $obj = My::Empty->new;
+  tie %h, 'Glib::Ex::TieProperties', $obj;
+  print "SCALAR: ",(scalar %h),"\n";
+  print "keys: ",(keys %h),"\n";
+
+  require Gtk2;
+  $obj = Gtk2::Label->new;
+  tie %h, 'Glib::Ex::TieProperties', $obj;
+  print "SCALAR: ",(scalar %h),"\n";
+  print "keys: ",(keys %h),"\n";
+  exit 0;
+}
+
 if (0) {
   print defined exists &foo;
   exit 0;
@@ -99,12 +123,3 @@ use Gtk2;
   print "SCALAR: ",(scalar %h),"\n";
 }
 
-package My::Empty;
-use Glib::Object::Subclass 'Glib::Object';
-
-{
-  my $empty = My::Empty->new;
-  tie my(%h), 'Glib::Ex::TieProperties', $empty;
-  print "SCALAR: ",(scalar %h),"\n";
-  print "keys: ",(keys %h),"\n";
-}

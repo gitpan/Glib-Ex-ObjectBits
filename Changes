@@ -16,11 +16,14 @@ You should have received a copy of the GNU General Public License along
 with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 10, September 2010
+	- TieProperties scalar() return bucket count style
+
 Version 9, July 2010
 	- new Glib::Ex::Signalbits
 
 Version 8, January 2010
-	- test script fix, SignalIds doesn't actually have anything
+	- test script fix, SignalIds doesn't have anything against
 	  id==0 and attempting that provokes a g_assert() in glib 2.4
 
 Version 7, January 2010

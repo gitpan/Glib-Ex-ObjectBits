@@ -23,7 +23,7 @@ use warnings;
 use Carp;
 use Glib;
 
-our $VERSION = 9;
+our $VERSION = 10;
 
 use constant DEBUG => 0;
 
@@ -70,11 +70,14 @@ sub TIEHASH {
 }
 sub FETCH  {
   my ($self, $key) = @_;
-  my $obj = $self->[_OBJ] || return undef; # if weakened away
-  my $pspec = $obj->find_property ($key) || return undef;
-  return ($pspec->{'flags'} >= 'readable'
-          ? $obj->get_property($key)
-          : undef); # not readable
+  if (my $obj = $self->[_OBJ]) {                  # when not weakened away
+    if (my $pspec = $obj->find_property ($key)) { # when known property
+      if ($pspec->{'flags'} >= 'readable') {      # when readable
+        return $obj->get_property($key);
+      }
+    }
+  }
+  return undef; # otherwise
 }
 sub STORE  {
   my ($self, $key, $value) = @_;
@@ -87,8 +90,10 @@ sub EXISTS {
   return defined ($obj->find_property($key));
 }
 sub DELETE { croak 'Cannot delete object properties' }
-{ no warnings;
-  *CLEAR = \&DELETE; }
+BEGIN {
+  no warnings;
+  *CLEAR = \&DELETE;
+}
 
 sub FIRSTKEY {
   my ($self) = @_;
@@ -100,16 +105,23 @@ sub NEXTKEY {
   return shift @{$_[0]->[_KEYS]};
 }
 
-# true if at least one property
+# Return true if at least one property, this new in 5.8.3.
+# Mimic the "8/8" bucket of a real hash because it's easy enough to do.
+#
+# It's pretty wasteful getting the full list of pspecs then throwing them
+# away, but g_object_class_list_properties() is about the only way to check
+# if there's any, and $obj->list_properties() is the only interface to that
+# function.
+#
 sub SCALAR {
   my ($self) = @_;
-  # it's pretty wasteful getting a full list of pspecs then throwing them
-  # away, but g_object_class_list_properties() is about the only way to
-  # check if there's any, and $obj->list_properties() is the only interface
-  # to that function.
-  my $obj;
-  return (($obj = $self->[_OBJ])  # false if weakened away
-          && defined (($obj->list_properties)[0]));
+  if (my $obj = $self->[_OBJ]) {      # when not weakened away
+    my @pspecs = $obj->list_properties;
+    if (my $len = scalar(@pspecs)) {  # buckets only if not empty
+      return "$len/$len";
+    }
+  }
+  return 0; # false for no properties
 }
 
 1;
@@ -136,11 +148,10 @@ C<Glib::Ex::TieProperties> accesses properties of a given C<Glib::Object>
 through a tied hash.  The keys are the property names and fetching and
 storing values operates on the property values.
 
-If you're just getting and setting properties then you're best off simply
-calling the C<get> and C<set> methods, but one good use for a tie is to
-apply C<local> settings within a block, to be undone by a C<set> back to
-their previous values no matter how the block is left (C<goto>, C<return>,
-C<die>, etc).
+If you're just getting and setting properties then the Object C<get> and
+C<set> methods are enough.  But one good use for a tie is to apply C<local>
+settings within a block, to be undone by a C<set> back to their previous
+values no matter how the block is left (C<goto>, C<return>, C<die>, etc).
 
     {
       tie my(%aprops), 'Glib::Ex::TieProperties', $adjustment;
@@ -169,11 +180,11 @@ Like most C<tie> things, TieProperties is better in concept than actuality.
 There's relatively few object properties wanting block-scoped changes, and
 things like getting all property names or values must generally pay
 attention to whether properties are read-only, write-only, etc, so a naive
-values iteration is rarely much good.
+C<each()> etc iteration is rarely much good.
 
 =head2 Details
 
-The property names for the keys are anything accepted by C<get_property>,
+The property names as keys are anything accepted by C<get_property>,
 C<find_property>, etc.  This means underscores "_" can be used in place of
 dashes "-".  For example C<border_width> is an alias for C<border-width>.
 
@@ -191,6 +202,12 @@ to use C<each> to iterate through an object with any write-only properties.
 Storing to a non-existent property throws an error, a bit like a restricted
 hash (see L<Hash::Util>).  Storing to a read-only property likewise throws
 an error.
+
+For Perl 5.8.3 and up C<scalar()> is arranged to give a count like "17/17"
+when not empty, similar to a real hash.  This might help code expecting a
+slashed form, not just a boolean.  The counts pretend the hashing is
+perfect, but don't depend on that since perhaps in the future some more
+realistic report might be possible.
 
 =head1 FUNCTIONS
 
@@ -234,9 +251,9 @@ C<$object>.  This is the same as
     tie my(%hash), 'Glib::Ex::TieProperties', $object;
     $hashref = \%hash;
 
-The difference between a hash or hashref is normally just a matter of which
-style you prefer.  Both can be created with one line of code (With the C<my>
-worked into the C<tie> call for the plain hash).
+The difference between a hash and a hashref is normally just a matter of
+which style you prefer.  Both can be created with one line of code (the
+C<my> worked into the C<tie> call for the plain hash).
 
 =item C<< Glib::Ex::TieProperties->in_object ($object) >>
 
@@ -299,7 +316,7 @@ Or getting the C<$tobj> later with C<tied>,
 
 =back
 
-=head1 OTHER NOTES
+=head1 OTHER WAYS TO DO IT
 
 The C<Glib> module C<< $object->tie_properties >> feature does a very
 similar thing.  But it works by populating C<$object> with individual tied

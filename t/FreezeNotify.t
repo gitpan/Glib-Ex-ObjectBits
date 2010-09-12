@@ -33,41 +33,39 @@ require Glib;
 MyTestHelpers::glib_gtk_versions();
 
 
-package Foo;
-use strict;
-use warnings;
-use Glib;
-use Glib::Object::Subclass
-  Glib::Object::,
-  properties => [Glib::ParamSpec->boolean
-                 ('myprop-one',
-                  'myprop-one',
-                  'Blurb.',
-                  0,
-                  Glib::G_PARAM_READWRITE),
+{
+  package Foo;
+  use strict;
+  use warnings;
+  use Glib;
+  use Glib::Object::Subclass
+    Glib::Object::,
+        properties => [Glib::ParamSpec->boolean
+                       ('myprop-one',
+                        'myprop-one',
+                        'Blurb.',
+                        0,
+                        Glib::G_PARAM_READWRITE),
 
-                 Glib::ParamSpec->boolean
-                 ('myprop-two',
-                  'myprop-two',
-                  'Blurb.',
-                  0,
-                  Glib::G_PARAM_READWRITE),
+                       Glib::ParamSpec->boolean
+                       ('myprop-two',
+                        'myprop-two',
+                        'Blurb.',
+                        0,
+                        Glib::G_PARAM_READWRITE),
 
-                 Glib::ParamSpec->int
-                 ('myprop-integer',
-                  'myprop-integer',
-                  'Blurb.',
-                  0, 100, 0,
-                  Glib::G_PARAM_READWRITE)
-                ];
-
-package main;
-use strict;
-use warnings;
+                       Glib::ParamSpec->int
+                       ('myprop-integer',
+                        'myprop-integer',
+                        'Blurb.',
+                        0, 100, 0,
+                        Glib::G_PARAM_READWRITE)
+                      ];
+}
 
 # version number
 {
-  my $want_version = 9;
+  my $want_version = 10;
   is ($Glib::Ex::FreezeNotify::VERSION, $want_version,
       'VERSION variable');
   is (Glib::Ex::FreezeNotify->VERSION, $want_version,

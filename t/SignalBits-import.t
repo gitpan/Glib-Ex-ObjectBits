@@ -35,20 +35,20 @@ use Glib::Ex::SignalBits qw (accumulator_first
 {
   my $default_run = 0;
 
-  package TestAccumulatorFirst;
-  use Glib::Object::Subclass
-    'Glib::Object',
-      signals
-        => { foo
-             => { param_types   => [],
-                  return_type   => 'Glib::String',
-                  flags         => ['run-last'],
-                  class_closure => sub {$default_run++; return "default_run" },
-                  accumulator   => \&Glib::Ex::SignalBits::accumulator_first_defined,
-                },
-           };
-
-  package main;
+  {
+    package TestAccumulatorFirst;
+    use Glib::Object::Subclass
+      'Glib::Object',
+        signals
+          => { foo
+               => { param_types   => [],
+                    return_type   => 'Glib::String',
+                    flags         => ['run-last'],
+                    class_closure => sub {$default_run++; return "default_run" },
+                    accumulator   => \&Glib::Ex::SignalBits::accumulator_first_defined,
+                  },
+             };
+  }
   my $obj = TestAccumulatorFirst->new;
   my $ret = $obj->signal_emit ('foo');
   is ($ret, "default_run");
@@ -62,23 +62,23 @@ use Glib::Ex::SignalBits qw (accumulator_first
   my $default_run = 0;
   my $default_return = "default_run";
 
-  package TestAccumulatorFirstDefined;
-  use Glib::Object::Subclass
-    'Glib::Object',
-      signals
-        => { foo
-             => { param_types   => [],
-                  return_type   => 'Glib::String',
-                  flags         => ['run-last'],
-                  class_closure => sub {
-                    $default_run++;
-                    return $default_return;
+  {
+    package TestAccumulatorFirstDefined;
+    use Glib::Object::Subclass
+      'Glib::Object',
+        signals
+          => { foo
+               => { param_types   => [],
+                    return_type   => 'Glib::String',
+                    flags         => ['run-last'],
+                    class_closure => sub {
+                      $default_run++;
+                      return $default_return;
+                    },
+                    accumulator   => \&Glib::Ex::SignalBits::accumulator_first_defined,
                   },
-                  accumulator   => \&Glib::Ex::SignalBits::accumulator_first_defined,
-                },
-           };
-
-  package main;
+             };
+  }
   my $obj = TestAccumulatorFirstDefined->new;
   my $ret = $obj->signal_emit ('foo');
   is ($ret, "default_run");

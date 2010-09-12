@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Glib-Ex-ObjectBits
-version:            9
+version:            10
 abstract:           Helpers for Glib objects.
 author:
     - Kevin Ryde <user42@zip.com.au>
@@ -30,6 +30,7 @@ optional_features:
         description:  Stuff used variously for development.
         requires:
             Pod::Simple::HTML:  0
+            warnings::unused:   0
     maximum_tests:
         description:  Have "make test" do as much as possible.
         requires:

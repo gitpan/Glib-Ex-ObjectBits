@@ -27,7 +27,7 @@ our @EXPORT_OK = qw(accumulator_first
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 9;
+our $VERSION = 10;
 
 sub accumulator_first {
   my ($hint, $acc, $ret) = @_;
@@ -74,22 +74,9 @@ Glib::Ex::SignalBits -- miscellaneous signal helpers
 =head2 Accumulators
 
 The following functions are designed for use as the "accumulator" in a
-signal created in a C<Glib::Object::Subclass> or
+signal created by C<Glib::Object::Subclass> or
 C<< Glib::Type->register_object >>.  The functions are trivial, but giving
-them names gets the return the right way around and the right sense.  For
-example,
-
-    use Glib::Object::Subclass
-      'Gtk2::Widget',
-      signals => {
-        'make-title' => {
-          param_types   => ['Glib::Int'],
-          return_type   => 'Glib::String',
-          flags         => ['run-last'],
-          class_closure => \&my_default_make_title,
-          accumulator   => \&Glib::Ex::SignalBits::accumulator_first_defined,
-        },
-      };
+them names gets the right sense and order for the return values.
 
 =over 4
 
@@ -105,6 +92,24 @@ non-C<undef> C<Glib::Scalar>.
 
 =back
 
+=head3 Example
+
+    use Glib::Object::Subclass
+      'Gtk2::Widget',
+      signals => {
+        'make-title' => {
+          param_types   => ['Glib::Int'],
+          return_type   => 'Glib::String',
+          flags         => ['run-last'],
+          class_closure => \&my_default_make_title,
+          accumulator   => \&Glib::Ex::SignalBits::accumulator_first_defined,
+        },
+      };
+
+Don't forget to C<use Glib::Ex::SignalBits> because a non-existent function
+in a signal accumulator will cause an C<abort> from Perl-Gtk (as of version
+1.220).
+
 =head1 EXPORTS
 
 Nothing is exported by default, but each function can be requested in usual
@@ -113,14 +118,13 @@ C<Exporter> style,
     use Glib::Ex::SignalBits 'accumulator_first';
     
     use Glib::Object::Subclass
-      ...
-      accumulator => \&accumulator_first
+      ... accumulator => \&accumulator_first
 
 =head1 SEE ALSO
 
 L<Glib::Object>,
 L<Glib::Object::Subclass>,
-L<Glib::Signal>
+L<Glib::Signal>,
 L<Glib::Ex::SignalIds>,
 L<Glib::Ex::FreezeNotify>
 
