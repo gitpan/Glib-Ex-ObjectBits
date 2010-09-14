@@ -39,7 +39,7 @@ MyTestHelpers::glib_gtk_versions();
   use warnings;
   use Glib;
   use Glib::Object::Subclass
-    Glib::Object::,
+    'Glib::Object',
         properties => [Glib::ParamSpec->boolean
                        ('myprop-one',
                         'myprop-one',
@@ -59,13 +59,13 @@ MyTestHelpers::glib_gtk_versions();
                         'myprop-integer',
                         'Blurb.',
                         0, 100, 0,
-                        Glib::G_PARAM_READWRITE)
+                        Glib::G_PARAM_READWRITE),
                       ];
 }
 
 # version number
 {
-  my $want_version = 10;
+  my $want_version = 11;
   is ($Glib::Ex::FreezeNotify::VERSION, $want_version,
       'VERSION variable');
   is (Glib::Ex::FreezeNotify->VERSION, $want_version,

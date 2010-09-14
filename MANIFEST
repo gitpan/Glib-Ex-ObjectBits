@@ -14,6 +14,7 @@ devel/tie-one.pl
 devel/tie-properties.pl
 inc/my_pod2html
 inc/MyMakeMakerExtras.pm
+lib/Glib/Ex/EnumBits.pm
 lib/Glib/Ex/FreezeNotify.pm
 lib/Glib/Ex/SignalBits.pm
 lib/Glib/Ex/SignalIds.pm
@@ -29,6 +30,7 @@ t/0-Test-DistManifest.t
 t/0-Test-Pod.t
 t/0-Test-Synopsis.t
 t/0-Test-YAML-Meta.t
+t/EnumBits.t
 t/FreezeNotify.t
 t/MyTestHelpers.pm
 t/SignalBits-import.t

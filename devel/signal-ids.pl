@@ -27,7 +27,7 @@ use Glib;
   package MyClass;
   use Glib;
   use Glib::Object::Subclass
-    Glib::Object::,
+    'Glib::Object',
         properties => [ Glib::ParamSpec->int
                         ('myprop',
                          'myprop',

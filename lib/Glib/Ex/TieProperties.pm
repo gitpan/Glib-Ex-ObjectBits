@@ -23,7 +23,7 @@ use warnings;
 use Carp;
 use Glib;
 
-our $VERSION = 10;
+our $VERSION = 11;
 
 use constant DEBUG => 0;
 
@@ -126,6 +126,8 @@ sub SCALAR {
 
 1;
 __END__
+
+=for stopwords Glib-Ex-ObjectBits Ryde hashref TieProperties boolean Ryde
 
 =head1 NAME
 

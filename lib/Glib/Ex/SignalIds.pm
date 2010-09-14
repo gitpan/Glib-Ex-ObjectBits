@@ -23,7 +23,7 @@ use Carp;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 10;
+our $VERSION = 11;
 
 sub new {
   my ($class, $object, @ids) = @_;
@@ -76,6 +76,8 @@ sub disconnect {
 1;
 __END__
 
+=for stopwords Glib-Ex-ObjectBits Ryde SignalIds Eg
+
 =head1 NAME
 
 Glib::Ex::SignalIds -- hold connected signal handler IDs
@@ -126,10 +128,10 @@ might look like
     }
 
 The C<$model &&> part allows C<undef> for no model, in which case the
-C<model_ids> becomes undef.  Any previous SignalIds object in C<model_ids>
-is discarded and thus disconnects the previous model.  (In real code you
-won't want C<$self> in the signal user data, but something weakened to avoid
-a circular reference, the same as for all signal connections.)
+C<model_ids> becomes C<undef>.  Any previous SignalIds object in
+C<model_ids> is discarded and thus disconnects the previous model.  (In real
+code you won't want C<$self> in the signal user data, but something weakened
+to avoid a circular reference, the same as for all signal connections.)
 
 The key to this kind of usage is that the target object might change and you
 want a convenient way to connect to the new and disconnect from the old.  If

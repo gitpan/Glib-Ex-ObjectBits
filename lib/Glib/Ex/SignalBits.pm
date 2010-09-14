@@ -27,7 +27,7 @@ our @EXPORT_OK = qw(accumulator_first
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 10;
+our $VERSION = 11;
 
 sub accumulator_first {
   my ($hint, $acc, $ret) = @_;
@@ -59,7 +59,7 @@ sub accumulator_first_defined {
 1;
 __END__
 
-=for stopwords Ryde ObjectBits
+=for stopwords Glib-Ex-ObjectBits Ryde Perl-Glib
 
 =head1 NAME
 
@@ -107,7 +107,7 @@ non-C<undef> C<Glib::Scalar>.
       };
 
 Don't forget to C<use Glib::Ex::SignalBits> because a non-existent function
-in a signal accumulator will cause an C<abort> from Perl-Gtk (as of version
+in a signal accumulator will cause an C<abort> from Perl-Glib (as of version
 1.220).
 
 =head1 EXPORTS

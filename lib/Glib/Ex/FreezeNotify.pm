@@ -23,7 +23,7 @@ use Carp;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 10;
+our $VERSION = 11;
 
 # set this to 1 for some diagnostic prints
 use constant DEBUG => 0;
@@ -58,6 +58,8 @@ sub DESTROY {
 1;
 __END__
 
+=for stopwords Glib-Ex-ObjectBits FreezeNotify AtExit destructor Ryde
+
 =head1 NAME
 
 Glib::Ex::FreezeNotify -- freeze notifies in scope guard style
@@ -89,7 +91,7 @@ it's exited, whether a C<goto>, early C<return>, C<die>, etc.
 
 This protects against an error throw leaving the object permanently frozen.
 Even in a simple bit of code an error can be thrown for a bad property name
-in a C<set>, or whle calculating a value.  (Though as of Glib-Perl 1.222 an
+in a C<set>, or while calculating a value.  (Though as of Glib-Perl 1.222 an
 invalid argument type to C<set> generally only provokes warnings.)
 
 =head2 Operation

@@ -21,7 +21,7 @@ use strict;
 use warnings;
 use Glib;
 
-our $VERSION = 10;
+our $VERSION = 11;
 
 sub new {
   my ($class, @ids) = @_;
@@ -52,6 +52,8 @@ sub remove {
 
 1;
 __END__
+
+=for stopwords Glib-Ex-ObjectBits Ryde Eg SourceIds
 
 =head1 NAME
 

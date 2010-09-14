@@ -34,7 +34,7 @@ MyTestHelpers::glib_gtk_versions();
 
 # version number
 {
-  my $want_version = 10;
+  my $want_version = 11;
   is ($Glib::Ex::SignalIds::VERSION, $want_version, 'VERSION variable');
   is (Glib::Ex::SignalIds->VERSION,  $want_version, 'VERSION class method');
   ok (eval { Glib::Ex::SignalIds->VERSION($want_version); 1 },
@@ -58,7 +58,7 @@ MyTestHelpers::glib_gtk_versions();
   package MyClass;
   use Glib;
   use Glib::Object::Subclass
-    Glib::Object::,
+    'Glib::Object',
         properties => [ Glib::ParamSpec->int
                         ('myprop',
                          'myprop',

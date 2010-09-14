@@ -27,7 +27,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 
 require Glib::Ex::SignalBits;
 
-my $want_version = 10;
+my $want_version = 11;
 is ($Glib::Ex::SignalBits::VERSION, $want_version, 'VERSION variable');
 is (Glib::Ex::SignalBits->VERSION,  $want_version, 'VERSION class method');
 { ok (eval { Glib::Ex::SignalBits->VERSION($want_version); 1 },
