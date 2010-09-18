@@ -30,7 +30,7 @@ our @EXPORT_OK = qw(to_display
                     to_display_default
                     to_description);
 
-our $VERSION = 11;
+our $VERSION = 12;
 
 sub to_display {
   my ($enum_class, $nick) = @_;
@@ -127,7 +127,7 @@ __END__
 
 =head1 NAME
 
-Glib::Ex::EnumBits -- misc enum helpers
+Glib::Ex::EnumBits -- misc Glib enum helpers
 
 =head1 SYNOPSIS
 

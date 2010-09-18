@@ -23,7 +23,7 @@ use warnings;
 use Carp;
 use Glib;
 
-our $VERSION = 11;
+our $VERSION = 12;
 
 use constant DEBUG => 0;
 
@@ -131,7 +131,7 @@ __END__
 
 =head1 NAME
 
-Glib::Ex::TieProperties -- tied hash for object property access
+Glib::Ex::TieProperties -- tied hash for Glib object property access
 
 =for test_synopsis my ($object)
 

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2007, 2008, 2009 Kevin Ryde
+# Copyright 2007, 2008, 2009, 2010 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -36,6 +36,8 @@ MyMakeMakerExtras::WriteMakefile
    PREREQ_PM    => {
                     # any version should be ok
                     'Glib' => 0,
+                    # used so name it explicitly
+                    'Glib::Object::Subclass' => 0,
                    },
 
    META_MERGE
@@ -51,9 +53,14 @@ MyMakeMakerExtras::WriteMakefile
       },
 
    MyMakeMakerExtras_Pod_Coverage
-   => [ 'Glib::Ex::FreezeNotify',
+   => [ 'Glib::Ex::EnumBits',
+	'Glib::Ex::FreezeNotify',
+	'Glib::Ex::ObjectBits',
 	'Glib::Ex::SignalIds',
 	'Glib::Ex::SourceIds',
-	'Glib::Ex::TieProperties,also_private=>[qr/^SCALAR$$/]',
+	'Glib::Ex::TieProperties',
+
+        # Pod::Coverage 0.21 knows SCALAR()
+        # ,also_private=>[qr/^SCALAR$$/]
       ],
   );

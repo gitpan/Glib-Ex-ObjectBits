@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Glib-Ex-ObjectBits
-version:            11
+version:            12
 abstract:           Helpers for Glib objects.
 author:
     - Kevin Ryde <user42@zip.com.au>
@@ -11,8 +11,9 @@ configure_requires:
 build_requires:
     ExtUtils::MakeMaker:  0
 requires:
-    Glib:  0
-    perl:  5.008
+    Glib:                 0
+    Glib::Object::Subclass:  0
+    perl:                 5.008
 resources:
     homepage:  http://user42.tuxfamily.org/glib-ex-objectbits/index.html
     license:   http://www.gnu.org/licenses/gpl.html

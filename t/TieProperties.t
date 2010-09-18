@@ -94,7 +94,7 @@ my %want_props = ('myprop-one' => 1,
 
 my $gobject_has_properties = defined ((Glib::Object->list_properties)[0]);
 
-my $want_version = 11;
+my $want_version = 12;
 {
   is ($Glib::Ex::TieProperties::VERSION, $want_version,
       'VERSION variable');

@@ -23,7 +23,7 @@ use Carp;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 11;
+our $VERSION = 12;
 
 sub new {
   my ($class, $object, @ids) = @_;
@@ -80,7 +80,7 @@ __END__
 
 =head1 NAME
 
-Glib::Ex::SignalIds -- hold connected signal handler IDs
+Glib::Ex::SignalIds -- hold connected Glib signal handler IDs
 
 =for test_synopsis my ($obj)
 
@@ -199,9 +199,12 @@ if nothing held).
 
 =item C<< $sigids->disconnect() >>
 
-Disconnect the signal IDs held in C<$sigids>, if not already disconnected.
+Disconnect all the signal IDs held in C<$sigids>, if not already
+disconnected.
+
 This is done automatically when C<$sigids> is garbage collected, but you can
-do it explicitly sooner if desired.
+do it explicitly sooner if desired.  New signal IDs, on the same C<$obj>,
+can be added again later with C<add>.
 
 =back
 

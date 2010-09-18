@@ -65,7 +65,7 @@ MyTestHelpers::glib_gtk_versions();
 
 # version number
 {
-  my $want_version = 11;
+  my $want_version = 12;
   is ($Glib::Ex::FreezeNotify::VERSION, $want_version,
       'VERSION variable');
   is (Glib::Ex::FreezeNotify->VERSION, $want_version,

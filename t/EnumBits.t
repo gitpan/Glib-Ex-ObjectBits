@@ -29,7 +29,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 require Glib::Ex::EnumBits;
 
 {
-  my $want_version = 11;
+  my $want_version = 12;
   is ($Glib::Ex::EnumBits::VERSION, $want_version, 'VERSION variable');
   is (Glib::Ex::EnumBits->VERSION,  $want_version, 'VERSION class method');
   ok (eval { Glib::Ex::EnumBits->VERSION($want_version); 1 },

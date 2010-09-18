@@ -27,7 +27,7 @@ our @EXPORT_OK = qw(accumulator_first
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 11;
+our $VERSION = 12;
 
 sub accumulator_first {
   my ($hint, $acc, $ret) = @_;
@@ -63,7 +63,7 @@ __END__
 
 =head1 NAME
 
-Glib::Ex::SignalBits -- miscellaneous signal helpers
+Glib::Ex::SignalBits -- miscellaneous Glib signal helpers
 
 =head1 SYNOPSIS
 

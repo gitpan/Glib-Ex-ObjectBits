@@ -23,7 +23,7 @@ use Carp;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 11;
+our $VERSION = 12;
 
 # set this to 1 for some diagnostic prints
 use constant DEBUG => 0;
@@ -62,7 +62,7 @@ __END__
 
 =head1 NAME
 
-Glib::Ex::FreezeNotify -- freeze notifies in scope guard style
+Glib::Ex::FreezeNotify -- freeze Glib object property notifies in scope guard style
 
 =for test_synopsis my ($obj, $obj1, $obj2)
 

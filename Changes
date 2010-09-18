@@ -16,8 +16,11 @@ You should have received a copy of the GNU General Public License along
 with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 12, September 2010
+	- new Glib::Ex::ObjectBits set_property_maybe()
+
 Version 11, September 2010
-	- new EnumBits to_display, to_description      
+	- new EnumBits to_display(), to_description()
 
 Version 10, September 2010
 	- TieProperties scalar() return bucket count style

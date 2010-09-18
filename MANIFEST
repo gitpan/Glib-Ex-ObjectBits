@@ -16,6 +16,7 @@ inc/my_pod2html
 inc/MyMakeMakerExtras.pm
 lib/Glib/Ex/EnumBits.pm
 lib/Glib/Ex/FreezeNotify.pm
+lib/Glib/Ex/ObjectBits.pm
 lib/Glib/Ex/SignalBits.pm
 lib/Glib/Ex/SignalIds.pm
 lib/Glib/Ex/SourceIds.pm
@@ -25,14 +26,10 @@ MANIFEST			This list of files
 MANIFEST.SKIP
 README
 SIGNATURE
-t/0-META-read.t
-t/0-Test-DistManifest.t
-t/0-Test-Pod.t
-t/0-Test-Synopsis.t
-t/0-Test-YAML-Meta.t
 t/EnumBits.t
 t/FreezeNotify.t
 t/MyTestHelpers.pm
+t/ObjectBits.t
 t/SignalBits-import.t
 t/SignalBits-pod.t
 t/SignalBits.t
@@ -40,4 +37,9 @@ t/SignalIds.t
 t/SourceIds.t
 t/TieProperties-test-weaken.t
 t/TieProperties.t
+xt/0-META-read.t
+xt/0-Test-DistManifest.t
+xt/0-Test-Pod.t
+xt/0-Test-Synopsis.t
+xt/0-Test-YAML-Meta.t
 META.yml                                 Module meta-data (added by MakeMaker)
