@@ -1,26 +1,26 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010 Kevin Ryde
+# Copyright 2010, 2011 Kevin Ryde
 
-# This file is part of Gtk2-Ex-ObjectBits.
+# This file is part of Glib-Ex-ObjectBits.
 #
-# Gtk2-Ex-ObjectBits is free software; you can redistribute it and/or modify
+# Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
 # Free Software Foundation; either version 3, or (at your option) any later
 # version.
 #
-# Gtk2-Ex-ObjectBits is distributed in the hope that it will be useful, but
+# Glib-Ex-ObjectBits is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 #
 # You should have received a copy of the GNU General Public License along
-# with Gtk2-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
+# with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
 
 use 5.008;
 use strict;
 use warnings;
-use Test::More tests => 28;
+use Test::More tests => 34;
 
 use lib 't';
 use MyTestHelpers;
@@ -29,7 +29,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 require Glib::Ex::EnumBits;
 
 {
-  my $want_version = 12;
+  my $want_version = 13;
   is ($Glib::Ex::EnumBits::VERSION, $want_version, 'VERSION variable');
   is (Glib::Ex::EnumBits->VERSION,  $want_version, 'VERSION class method');
   ok (eval { Glib::Ex::EnumBits->VERSION($want_version); 1 },
@@ -51,6 +51,14 @@ foreach my $elem (['foo', 'Foo'],
                   ['foo123bar4', 'Foo 123 Bar 4'],
                   ['FooBar', 'Foo Bar'],
                   ['Foo2Bar', 'Foo 2 Bar'],
+                  
+                  # think want split at last of run of upper
+                  ['AABar', 'AA Bar'],
+
+                  # how this behaves is experimental ...
+                  # no split at an upper case followed by a digit 
+                  ['A1B2C', 'A1 B2 C'],
+                  ['AR2W2Blah', 'AR2 W2 Blah'],
                  ) {
   my ($nick, $want) = @$elem;
   {

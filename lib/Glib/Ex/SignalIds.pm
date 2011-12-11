@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -23,7 +23,7 @@ use Carp;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 12;
+our $VERSION = 13;
 
 sub new {
   my ($class, $object, @ids) = @_;
@@ -104,6 +104,9 @@ This is designed to make life easier when putting connections on "external"
 objects which you should cleanup either in your own object destruction or
 when switching to a different target.
 
+The SignalIds data object itself is designed to be compact so that it could
+be used on a large number of objects.
+
 =head2 Target Object Usage
 
 A typical use is connecting to signals on a target object which is in one of
@@ -129,15 +132,15 @@ might look like
 
 The C<$model &&> part allows C<undef> for no model, in which case the
 C<model_ids> becomes C<undef>.  Any previous SignalIds object in
-C<model_ids> is discarded and thus disconnects the previous model.  (In real
+C<model_ids> is discarded and thus disconnects the previous model.  In real
 code you won't want C<$self> in the signal user data, but something weakened
-to avoid a circular reference, the same as for all signal connections.)
+to avoid a circular reference, the same as for all signal connections.
 
 The key to this kind of usage is that the target object might change and you
 want a convenient way to connect to the new and disconnect from the old.  If
-instead a sub-object or sub-widget belongs exclusively to you, never
-changes, and is destroyed at the same time as your object, then there's no
-need for disconnection and you don't need a SignalIds.
+on the other hand a sub-object or sub-widget belongs exclusively to you,
+never changes, and is destroyed at the same time as your object, then
+there's no need for disconnection and you don't need a SignalIds.
 
 =head2 Weakening
 
@@ -153,6 +156,11 @@ give slightly odd situations where the target object has disconnected its
 signals but Perl hasn't yet zapped references to the object.  For that
 reason SignalIds checks whether IDs are still connected before
 disconnecting, to avoid warnings from Glib.
+
+Warnings for "already disconnected" during target object destruction tend to
+be a bit subtle.  You can end up with the Perl-level object hash still
+existing yet all signals on the object already disconnected.  SignalIds is a
+handy way to avoid trouble.
 
 =head1 FUNCTIONS
 
@@ -203,8 +211,8 @@ Disconnect all the signal IDs held in C<$sigids>, if not already
 disconnected.
 
 This is done automatically when C<$sigids> is garbage collected, but you can
-do it explicitly sooner if desired.  New signal IDs, on the same C<$obj>,
-can be added again later with C<add>.
+do it explicitly sooner if desired.  New signal IDs on the same C<$obj> can
+be added again later with C<add>.
 
 =back
 
@@ -220,7 +228,7 @@ L<http://user42.tuxfamily.org/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 
-Copyright 2008, 2009, 2010 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by the

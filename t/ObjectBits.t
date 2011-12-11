@@ -1,21 +1,21 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010 Kevin Ryde
+# Copyright 2010, 2011 Kevin Ryde
 
-# This file is part of Gtk2-Ex-ObjectBits.
+# This file is part of Glib-Ex-ObjectBits.
 #
-# Gtk2-Ex-ObjectBits is free software; you can redistribute it and/or modify
+# Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
 # Free Software Foundation; either version 3, or (at your option) any later
 # version.
 #
-# Gtk2-Ex-ObjectBits is distributed in the hope that it will be useful, but
+# Glib-Ex-ObjectBits is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 #
 # You should have received a copy of the GNU General Public License along
-# with Gtk2-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
+# with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
 
 use 5.008;
 use strict;
@@ -29,7 +29,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 use Glib::Ex::ObjectBits 'set_property_maybe';
 
 {
-  my $want_version = 12;
+  my $want_version = 13;
   is ($Glib::Ex::ObjectBits::VERSION, $want_version, 'VERSION variable');
   is (Glib::Ex::ObjectBits->VERSION,  $want_version, 'VERSION class method');
   ok (eval { Glib::Ex::ObjectBits->VERSION($want_version); 1 },

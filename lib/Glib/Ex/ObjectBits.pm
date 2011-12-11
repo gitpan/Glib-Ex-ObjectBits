@@ -1,19 +1,19 @@
-# Copyright 2010 Kevin Ryde
+# Copyright 2010, 2011 Kevin Ryde
 
-# This file is part of Math-Image.
+# This file is part of Glib-Ex-ObjectBits.
 #
-# Math-Image is free software; you can redistribute it and/or modify
+# Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
 # Free Software Foundation; either version 3, or (at your option) any later
 # version.
 #
-# Math-Image is distributed in the hope that it will be useful, but
+# Glib-Ex-ObjectBits is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 #
 # You should have received a copy of the GNU General Public License along
-# with Math-Image.  If not, see <http://www.gnu.org/licenses/>.
+# with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
 
 package Glib::Ex::ObjectBits;
 use 5.008;
@@ -28,7 +28,7 @@ use Exporter;
 our @ISA = ('Exporter');
 our @EXPORT_OK = qw(set_property_maybe);
 
-our $VERSION = 12;
+our $VERSION = 13;
 
 sub set_property_maybe {
   my $object = shift;
@@ -36,6 +36,8 @@ sub set_property_maybe {
     croak "set_property_maybe() expect even number of pname,value arguments";
   }
   for (my $i = 0; $i < @_; ) {
+    ### set_property_maybe(): $_[$i]
+    ### pspec(): $object->find_property($_[$i])
     if ($object->find_property($_[$i])) {
       $i += 2;
     } else {
@@ -119,7 +121,7 @@ L<http://user42.tuxfamily.org/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 
-Copyright 2010 Kevin Ryde
+Copyright 2010, 2011 Kevin Ryde
 
 Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by the

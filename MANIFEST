@@ -8,6 +8,8 @@ debian/rules
 debian/source/format
 debian/watch
 devel/enum.pl
+devel/main-context.pl
+devel/prop-nicks.pl
 devel/signal-ids.pl
 devel/SignalHookIds.pm
 devel/tie-one.pl
@@ -37,7 +39,10 @@ t/SignalIds.t
 t/SourceIds.t
 t/TieProperties-test-weaken.t
 t/TieProperties.t
+xt/0-file-is-part-of.t
 xt/0-META-read.t
+xt/0-no-debug-left-on.t
+xt/0-Test-ConsistentVersion.t
 xt/0-Test-DistManifest.t
 xt/0-Test-Pod.t
 xt/0-Test-Synopsis.t

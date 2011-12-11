@@ -24,16 +24,14 @@ use Test::More;
 
 use lib 't';
 use MyTestHelpers;
+BEGIN { MyTestHelpers::nowarnings() }
 
-my $have_test_weaken = eval "use Test::Weaken 2.000; 1";
-if (! $have_test_weaken) {
-  plan skip_all => "due to Test::Weaken 2.000 not available -- $@";
-}
+# Test::Weaken 2.000 for leaks(), but 3.002 preferred as descends into the
+# tied object ...
+eval "use Test::Weaken 2.000; 1"
+  or plan skip_all => "due to Test::Weaken 2.000 not available -- $@";
 
-plan tests => 2;
-
-SKIP: { eval 'use Test::NoWarnings; 1'
-          or skip 'Test::NoWarnings not available', 1; }
+plan tests => 1;
 
 diag ("Test::Weaken version ", Test::Weaken->VERSION);
 require Glib;

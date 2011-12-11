@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2007, 2008, 2009, 2010 Kevin Ryde
+# Copyright 2007, 2008, 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -40,27 +40,29 @@ MyMakeMakerExtras::WriteMakefile
                     'Glib::Object::Subclass' => 0,
                    },
 
-   META_MERGE
-   => { resources
-        => { homepage => 'http://user42.tuxfamily.org/glib-ex-objectbits/index.html' },
-        optional_features
-        => { maximum_tests
-             => { description => 'Have "make test" do as much as possible.',
-                  requires => { 'Test::NoWarnings' => 0,
-                              },
-                },
-           },
-      },
+   META_MERGE =>
+   { resources =>
+     { homepage => 'http://user42.tuxfamily.org/glib-ex-objectbits/index.html' },
+     optional_features =>
+     { maximum_tests =>
+       { description => 'Have "make test" do as much as possible.',
+         requires => {
+                      # 3.002 to traverse tied() obj
+                      'Test::Weaken' => '3.002',
+                     },
+       },
+     },
+   },
 
-   MyMakeMakerExtras_Pod_Coverage
-   => [ 'Glib::Ex::EnumBits',
-	'Glib::Ex::FreezeNotify',
-	'Glib::Ex::ObjectBits',
-	'Glib::Ex::SignalIds',
-	'Glib::Ex::SourceIds',
-	'Glib::Ex::TieProperties',
+   MyMakeMakerExtras_Pod_Coverage =>
+   [ 'Glib::Ex::EnumBits',
+     'Glib::Ex::FreezeNotify',
+     'Glib::Ex::ObjectBits',
+     'Glib::Ex::SignalIds',
+     'Glib::Ex::SourceIds',
+     'Glib::Ex::TieProperties',
 
-        # Pod::Coverage 0.21 knows SCALAR()
-        # ,also_private=>[qr/^SCALAR$$/]
-      ],
+     # Pod::Coverage 0.21 knows SCALAR()
+     # ,also_private=>[qr/^SCALAR$$/]
+   ],
   );

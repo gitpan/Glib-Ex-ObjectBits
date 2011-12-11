@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010 Kevin Ryde
+# Copyright 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -21,22 +21,12 @@ use 5.008;
 use strict;
 use warnings;
 use Glib::Ex::TieProperties;
-use Test::More;
+use Test::More tests => 38;
 
 use lib 't';
 use MyTestHelpers;
+BEGIN { MyTestHelpers::nowarnings() }
 
-my $have_test_weaken = eval "use Test::Weaken 2.000; 1";
-if (! $have_test_weaken) {
-  plan skip_all => "due to Test::Weaken 2.000 not available -- $@";
-}
-
-plan tests => 39;
-
-SKIP: { eval 'use Test::NoWarnings; 1'
-          or skip 'Test::NoWarnings not available', 1; }
-
-diag ("Test::Weaken version ", Test::Weaken->VERSION);
 require Glib;
 MyTestHelpers::glib_gtk_versions();
 
@@ -94,7 +84,7 @@ my %want_props = ('myprop-one' => 1,
 
 my $gobject_has_properties = defined ((Glib::Object->list_properties)[0]);
 
-my $want_version = 12;
+my $want_version = 13;
 {
   is ($Glib::Ex::TieProperties::VERSION, $want_version,
       'VERSION variable');

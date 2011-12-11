@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -19,14 +19,9 @@ package Glib::Ex::FreezeNotify;
 use 5.008;
 use strict;
 use warnings;
-use Carp;
-use Glib;
 use Scalar::Util;
 
-our $VERSION = 12;
-
-# set this to 1 for some diagnostic prints
-use constant DEBUG => 0;
+our $VERSION = 13;
 
 sub new {
   my $class = shift;
@@ -37,7 +32,7 @@ sub new {
 
 sub add {
   my $self = shift;
-  if (DEBUG) { print "FreezeNotify on ",join(' ',@_),"\n"; }
+  ### FreezeNotify add(): "@_"
   foreach my $object (@_) {
     $object->freeze_notify;
     push @$self, $object;
@@ -47,10 +42,11 @@ sub add {
 
 sub DESTROY {
   my ($self) = @_;
+  ### FreezeNotify DESTROY()
   while (@$self) {
     my $object = pop @$self;
     next if ! defined $object; # possible undef by weakening
-    if (DEBUG) { print "FreezeNotify thaw $object\n"; }
+    ### FreezeNotify thaw: "$object"
     $object->thaw_notify;
   }
 }
@@ -101,16 +97,17 @@ FreezeNotify object.
 
 FreezeNotify only holds weak references to its objects, so the mere fact
 they're due for later thawing doesn't keep them alive if nothing else cares
-if they live or die.  The effect is that frozen objects can be garbage
-collected within a freeze block, at the same point they would be without any
+whether they live or die.  The effect is that frozen objects can be garbage
+collected within a freeze block at the same point they would be without any
 freezing, instead of extending their life to the end of the block.
 
-It works to nest freeze/thaws, done either with FreezeNotify or with other
-C<freeze_notify> calls.  C<Glib::Object> simply counts outstanding freezes,
-which means they don't have to nest -- multiple freezes can overlap in any
-fashion.  If you're freezing for an extended time then a FreezeNotify object
-is a good way not to lose track of the thaws, although anything except a
-short freeze for a handful of C<set_property> calls would be unusual.
+It works to have multiple freeze/thaws, done either with FreezeNotify or
+with other C<freeze_notify> calls.  C<Glib::Object> simply counts
+outstanding freezes, which means they don't have to nest, so multiple
+freezes can overlap in any fashion.  If you're freezing for an extended time
+then a FreezeNotify object is a good way not to lose track of the thaws,
+although anything except a short freeze for a handful of C<set_property>
+calls would be unusual.
 
 =head1 FUNCTIONS
 
@@ -139,8 +136,8 @@ becomes instead
 Add additional objects to the freezer, calling C<< $object->freeze_notify >>
 on each, and setting up for C<< thaw_notify >> the same as in C<new> above.
 
-If the objects to be frozen are not known in advance then a good approach is
-to create an empty freezer with C<new>, then add objects to it as required.
+If the objects to be frozen are not known in advance then it's good to
+create an empty freezer with C<new> then add objects to it as required.
 
 =back
 
@@ -148,14 +145,21 @@ to create an empty freezer with C<new>, then add objects to it as required.
 
 When there's multiple objects in a freezer it's unspecified what order the
 C<thaw_notify> calls are made.  What would be good?  First-in first-out, or
-a stack?  You can create multiple FreezeNotify objects and arrange blocks to
-destroy them in a particular order if it matters.
+a stack?  You can create multiple FreezeNotify objects and arrange blocks or
+explicit discards to destroy them in a particular order if it matters.
 
 There's quite a few general purpose block-scope cleanup systems if you want
-more than just thaws.  L<Scope::Guard|Scope::Guard>, L<AtExit|AtExit>,
-L<Sub::ScopeFinalizer|Scope::Guard> and L<Guard|Guard> use the destructor
-style.  L<Hook::Scope|Hook::Scope> and
-L<B::Hooks::EndOfScope|B::Hooks::EndOfScope> manipulate the code in a block.
+more than just thaws.
+L<Scope::Guard|Scope::Guard>,
+L<AtExit|AtExit>,
+L<End|End>,
+L<ReleaseAction|ReleaseAction>,
+L<Sub::ScopeFinalizer|Sub::ScopeFinalizer>
+and L<Guard|Guard> use the destructor style.
+L<Hook::Scope|Hook::Scope>
+and L<B::Hooks::EndOfScope|B::Hooks::EndOfScope>
+manipulate the code in a block.
+L<Unwind::Protect|Unwind::Protect> uses an C<eval> and re-throw.
 
 =head1 SEE ALSO
 
@@ -169,7 +173,7 @@ L<http://user42.tuxfamily.org/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 
-Copyright 2008, 2009, 2010 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by the

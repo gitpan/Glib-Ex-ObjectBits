@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -27,7 +27,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 
 require Glib::Ex::SignalBits;
 
-my $want_version = 12;
+my $want_version = 13;
 is ($Glib::Ex::SignalBits::VERSION, $want_version, 'VERSION variable');
 is (Glib::Ex::SignalBits->VERSION,  $want_version, 'VERSION class method');
 { ok (eval { Glib::Ex::SignalBits->VERSION($want_version); 1 },
@@ -51,15 +51,16 @@ MyTestHelpers::glib_gtk_versions();
     package TestAccumulatorFirst;
     use Glib::Object::Subclass
       'Glib::Object',
-        signals
-          => { foo => { param_types   => [],
-                        return_type   => 'Glib::String',
-                        flags         => ['run-last'],
-                        class_closure => sub { $default_run++;
-                                               return "default_run" },
-                        accumulator   => \&Glib::Ex::SignalBits::accumulator_first_defined,
-                      },
-             };
+        signals => 
+          { foo =>
+            { param_types   => [],
+              return_type   => 'Glib::String',
+              flags         => ['run-last'],
+              class_closure => sub { $default_run++;
+                                     return "default_run" },
+              accumulator   => \&Glib::Ex::SignalBits::accumulator_first_defined,
+            },
+          };
   }
 
   my $obj = TestAccumulatorFirst->new;
@@ -97,18 +98,18 @@ MyTestHelpers::glib_gtk_versions();
     package TestAccumulatorFirstDefined;
     use Glib::Object::Subclass
       'Glib::Object',
-        signals
-          => { foo
-               => { param_types   => [],
-                    return_type   => 'Glib::String',
-                    flags         => ['run-last'],
-                    class_closure => sub {
-                      $default_run++;
-                      return $default_return;
-                    },
-                    accumulator   => \&Glib::Ex::SignalBits::accumulator_first_defined,
-                  },
-             };
+        signals =>
+          { foo =>
+            { param_types   => [],
+              return_type   => 'Glib::String',
+              flags         => ['run-last'],
+              class_closure => sub {
+                $default_run++;
+                return $default_return;
+              },
+              accumulator   => \&Glib::Ex::SignalBits::accumulator_first_defined,
+            },
+          };
   }
 
   my $obj = TestAccumulatorFirstDefined->new;

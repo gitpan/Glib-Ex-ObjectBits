@@ -1,5 +1,5 @@
-libglib-ex-objectbits-perl (12-1) unstable; urgency=low
+libglib-ex-objectbits-perl (13-1) unstable; urgency=low
 
   * Packaged version.
 
- -- Kevin Ryde <user42@zip.com.au>  Sat, 18 Sep 2010 10:16:41 +1000
+ -- Kevin Ryde <user42@zip.com.au>  Sun, 11 Dec 2011 16:30:29 +1100

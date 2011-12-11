@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -21,20 +21,18 @@ use 5.008;
 use strict;
 use warnings;
 use Glib::Ex::SignalIds;
-use Test::More tests => 23;
+use Test::More tests => 22;
 
 use lib 't';
 use MyTestHelpers;
-
-SKIP: { eval 'use Test::NoWarnings; 1'
-          or skip 'Test::NoWarnings not available', 1; }
+BEGIN { MyTestHelpers::nowarnings() }
 
 require Glib;
 MyTestHelpers::glib_gtk_versions();
 
 # version number
 {
-  my $want_version = 12;
+  my $want_version = 13;
   is ($Glib::Ex::SignalIds::VERSION, $want_version, 'VERSION variable');
   is (Glib::Ex::SignalIds->VERSION,  $want_version, 'VERSION class method');
   ok (eval { Glib::Ex::SignalIds->VERSION($want_version); 1 },

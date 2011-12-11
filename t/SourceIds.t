@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -40,7 +40,7 @@ sub do_idle {
 
 # version number
 {
-  my $want_version = 12;
+  my $want_version = 13;
   is ($Glib::Ex::SourceIds::VERSION, $want_version, 'VERSION variable');
   is (Glib::Ex::SourceIds->VERSION,  $want_version, 'VERSION class method');
   ok (eval { Glib::Ex::SourceIds->VERSION($want_version); 1 },

@@ -1,19 +1,19 @@
-# Copyright 2010 Kevin Ryde
+# Copyright 2010, 2011 Kevin Ryde
 
-# This file is part of Math-Image.
+# This file is part of Glib-Ex-ObjectBits.
 #
-# Math-Image is free software; you can redistribute it and/or modify
+# Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
 # Free Software Foundation; either version 3, or (at your option) any later
 # version.
 #
-# Math-Image is distributed in the hope that it will be useful, but
+# Glib-Ex-ObjectBits is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 #
 # You should have received a copy of the GNU General Public License along
-# with Math-Image.  If not, see <http://www.gnu.org/licenses/>.
+# with Glib-Ex-ObjectBits.  If not, see <http://www.gnu.org/licenses/>.
 
 package Glib::Ex::EnumBits;
 use 5.008;
@@ -30,7 +30,7 @@ our @EXPORT_OK = qw(to_display
                     to_display_default
                     to_description);
 
-our $VERSION = 12;
+our $VERSION = 13;
 
 sub to_display {
   my ($enum_class, $nick) = @_;
@@ -64,9 +64,10 @@ sub to_display_default {
   my $str = join (' ',
                   map {ucfirst}
                   split(/[-_ ]+
-                       |(?<=\D)(?=\d)
-                       |(?<=\d)(?=\D)
+                       |(?<=[^[:upper:][:digit:]])(?=\d)     # before a digit
+                       |(?<=\d)(?=\D)        # after a digit
                        |(?<=[[:lower:]])(?=[[:upper:]])
+                       |(?<=[[:upper:]])(?=[[:upper:]][[:lower:]])
                         /x,
                         $nick));
   if (defined $enum_class
@@ -166,8 +167,8 @@ a non-C<undef> there used,
     %My::Things::EnumBits_to_display = ('foo'     => 'Food',
                                         'bar-ski' => 'Barrage');
 
-Setting that may provoke a "used only once" warning (per L<perldiag>) in a
-program, though normally not in a module.  Use C<no warnings 'once'>, or a
+Setting that may provoke a "used only once" warning (see L<perldiag>) in a
+program, though normally not in a module.  Use C<no warnings 'once'>, or
 C<package> and C<our>,
 
     {
@@ -176,8 +177,8 @@ C<package> and C<our>,
       our %EnumBits_to_display = ('foo' => 'Oof');
     }
 
-The C<package> style like this can be handy if setting up a
-C<to_description> below too.
+C<package> style like this can be handy if setting up a C<to_description>
+below too.
 
 =item C<< $str = Glib::Ex::EnumBits::to_display_default ($enum_class, $nick) >>
 
@@ -189,7 +190,7 @@ example
 
 The C<$enum_class> parameter is not currently used, but it's the same as
 C<to_display> above and might be used in the future for better default
-mangling.
+mangling.  C<$enum_class> can be C<undef> to crunch for an unknown enum.
 
 =back
 
@@ -246,7 +247,7 @@ L<http://user42.tuxfamily.org/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 
-Copyright 2010 Kevin Ryde
+Copyright 2010, 2011 Kevin Ryde
 
 Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by the
