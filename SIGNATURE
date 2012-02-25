@@ -15,58 +15,66 @@ not run its Makefile.PL or Build.PL.
 Hash: SHA1
 
 SHA1 842745cb706f8f2126506f544492f7a80dbe29b3 COPYING
-SHA1 1cfb1eb9de355b32cf1476fd1b6048548314190a Changes
-SHA1 10d26299c4341fd8077b4b0d99368cdc107d9f6a MANIFEST
-SHA1 1d745ef4cc154d3b13bfee6d1048ac4135fc1aa7 MANIFEST.SKIP
-SHA1 a0003fcb1297b8e6267fca21888627375af046e0 META.yml
-SHA1 91735a11687efb72c5fcf9c3b74f02bcdeb17896 Makefile.PL
+SHA1 59ebc992eee7f909cf1555060fc749bae96871ca Changes
+SHA1 179923d00641a72028ff9323c3d2118c4e945879 MANIFEST
+SHA1 6e3dfa4a933a1a5da6c934cca324fc40495b2f5d MANIFEST.SKIP
+SHA1 dbd295d0e959469b0c83e6c1ce09331c2b237698 META.yml
+SHA1 36b369a68acabce997d1bc2b2ac098d1e596242e Makefile.PL
 SHA1 aea14a529977e9cb395f110e57c97a967483772a README
-SHA1 ec31054307320c68d6f091d534c6ccc054509db8 debian/changelog
+SHA1 4894404d3e67568cd5a611325ea9f791f3d09956 debian/changelog
 SHA1 ac3478d69a3c81fa62e60f5c3696165a4e5e6ac4 debian/compat
 SHA1 1de7113c01a1d41242ab44a2d35918ac97235875 debian/control
-SHA1 dacb71f5d29dd70adc0d46b0b5e2544fd4abdbe2 debian/copyright
+SHA1 fdb6809263f96b4dfbbc33c2b14c0b836503effb debian/copyright
 SHA1 bc98b616145701b8c6a72aec5c0f447455332987 debian/rules
 SHA1 61652cd1568dcf2614df833eba241755eee34e89 debian/source/format
 SHA1 e2e3436c7bdeb56c020c572192e2e38d337b1607 debian/watch
-SHA1 5609cdada65f41741db19e39969f5192a93a7154 devel/SignalHookIds.pm
+SHA1 89755b29d938e232c8da2d451f0e50ee105a7313 devel/SignalHookIds.pm
 SHA1 dc8b26639673a58353e3452de442ba5a19eefe3d devel/enum.pl
 SHA1 8cbe3e511427f62d32456973909e9764fe3d0ed6 devel/main-context.pl
 SHA1 fb20aa464d27a531662c1a63cba3aa492f589950 devel/prop-nicks.pl
 SHA1 019a8ef4ab55ce0f67b769b5a2407daa7330622f devel/signal-ids.pl
 SHA1 73355d136f590d0180d4d176fb565e78422ddcaf devel/tie-one.pl
 SHA1 4ef1001289c58fc53446bc8a0209a79bf8c291af devel/tie-properties.pl
-SHA1 adde07983018213fd4d1e285c5302d3e083f48d9 inc/MyMakeMakerExtras.pm
-SHA1 7a988b2aa7ed09f1cb9029a1ef3f0e2139dca0cf inc/my_pod2html
-SHA1 fd174e36d47f4bdb5cd8e6b892859d1d9c8e34c7 lib/Glib/Ex/EnumBits.pm
-SHA1 b953b250343a1e0832cebd6c3ed088721775aec0 lib/Glib/Ex/FreezeNotify.pm
-SHA1 884340f644be1c5d45b462440e4e4a2096c29bf5 lib/Glib/Ex/ObjectBits.pm
-SHA1 4fd045d6e871e9fd584f6786b5a9108569da9d41 lib/Glib/Ex/SignalBits.pm
-SHA1 2fa54cba59558928fec0dec0966cce7fbdfc4d7c lib/Glib/Ex/SignalIds.pm
-SHA1 be0bee62440f3a0555ea66e076fa1f66e6030bae lib/Glib/Ex/SourceIds.pm
-SHA1 71f60f8d611a8525d398d82f49d47e46b4f60136 lib/Glib/Ex/TieProperties.pm
-SHA1 643e11aa33e57d997c5adbdfccbc5f68383e91fc t/EnumBits.t
-SHA1 35240d60ebb1da5f1014dede9c05ff90f6794430 t/FreezeNotify.t
-SHA1 7c71d90be1fcf982d5a6f956e8cb8b48ed368131 t/MyTestHelpers.pm
-SHA1 fde83d3d6e352164bc7d8e9cec746bc5fc72f290 t/ObjectBits.t
+SHA1 183b55b1aeabdf5c302291291a8edc8968eb80f4 lib/Glib/Ex/EnumBits.pm
+SHA1 58b60818f964a23174447b797674b7678a258ad4 lib/Glib/Ex/FreezeNotify.pm
+SHA1 48e0176443da0dfeaa255078a63811315fcfbcc3 lib/Glib/Ex/ObjectBits.pm
+SHA1 3a4345084dfdf637451008abc5465e4c4df00599 lib/Glib/Ex/SignalBits.pm
+SHA1 fa8f13bdef8c6316794a8171bf1393710922ddee lib/Glib/Ex/SignalIds.pm
+SHA1 401bbf88d4ae775894dce5453d4d8d482f3ecfdb lib/Glib/Ex/SourceIds.pm
+SHA1 f1ec0748029a41ff6b6e7e21fe00df5f63508853 lib/Glib/Ex/TieProperties.pm
+SHA1 30577e1fc94ad99e4c1c0c680d9f85985f9b87eb t/EnumBits.t
+SHA1 5c6aeacf8f15247e4da1cf4d8557266185a4d05e t/FreezeNotify.t
+SHA1 969664973af9de9d898008e3ef280892b8d63244 t/MyTestHelpers.pm
+SHA1 3e7ea3a1c87e03826f94959dd6857ab0c0206267 t/ObjectBits.t
 SHA1 f4e0c2edbf1a1988393354ecaa821952c6734da1 t/SignalBits-import.t
 SHA1 708f473cfa9dd33ac748a02055e162c2ca6a877c t/SignalBits-pod.t
-SHA1 d6bd4aa8c9e0e6f54b43662cdce4314d7c70bd34 t/SignalBits.t
-SHA1 ae8f0cb27b6decc3a3051df1f67d88db969deee4 t/SignalIds.t
-SHA1 cb865c366b5ac22edd204521d2319b0284fa7f00 t/SourceIds.t
+SHA1 52bc46e96a2c01ca6befe9620f214d244cf34c3f t/SignalBits.t
+SHA1 3bb202654ff1eecea30a6adcb41d47b36cdce773 t/SignalIds.t
+SHA1 db66a1aa96e02b40fb2a407830d6ad12eeec4e7f t/SourceIds.t
 SHA1 9f91fc8e27a14960d16f7eac9d7e8fd117b561b3 t/TieProperties-test-weaken.t
-SHA1 b825c1372205ad28edaae14605b4bc477327b6eb t/TieProperties.t
-SHA1 0279c9310ec528d10a2a14e602bf98f1c776cce1 xt/0-META-read.t
+SHA1 505545e9445ba319da80422d91ac955437c0f1ba t/TieProperties.t
+SHA1 811028548aa4b360b5086d1af3150f9dde348aa6 xt/0-META-read.t
 SHA1 c9e7a47e1f397eb5f46d7e4ef21754d9df76e36e xt/0-Test-ConsistentVersion.t
 SHA1 d9e7f38a8dcfdb76c56951e4214be8eeda2e2289 xt/0-Test-DistManifest.t
 SHA1 9496e4a2a2734c7093ab6961900dd7a55800976e xt/0-Test-Pod.t
 SHA1 083242d959c1a9242c874982e4585872a95bec93 xt/0-Test-Synopsis.t
 SHA1 ec454b1b524d2d0b35e5a7d8292ad13d82becab5 xt/0-Test-YAML-Meta.t
-SHA1 d1d6dc2ff925e7ba5c014ce1361e6d097d061f2a xt/0-file-is-part-of.t
+SHA1 2fb2ce60ce5c740d1eb7e3b55a96f3ccb84d38c3 xt/0-file-is-part-of.t
 SHA1 daba2840c7f128371d42516619a0e04fee2f5ff4 xt/0-no-debug-left-on.t
+SHA1 e7bfb1661612dc7b428c73b12b037d437fc13507 xtools/my-check-copyright-years.sh
+SHA1 bfb75ffb7a834c345288e01f561b12695f191d12 xtools/my-check-file-part-of.sh
+SHA1 b3210a0f160cba43122ba5e12bbed7a96a19ca8e xtools/my-check-spelling.sh
+SHA1 fad81dac3edf7be728f70b50d772571ff31f1bdb xtools/my-deb.sh
+SHA1 b103ac314a248fb33e47b4cd4420e6209bf8559f xtools/my-diff-prev.sh
+SHA1 7fdd8ebda52e9729fa3a4e008cde866ec4a4cd5d xtools/my-kwalitee.sh
+SHA1 b91ca4a0349c8992cd6249fee9a93d06ecbedab5 xtools/my-manifest.sh
+SHA1 4db9c30b1fc96b04a794218ca19561b368f59679 xtools/my-pc.sh
+SHA1 7b1e948c88915689b3782d872ef9b92a2912c593 xtools/my-tags.sh
+SHA1 631dabf52c65a7b8613d6565fef2c2416ebba7e9 xtools/my-wunused.sh
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.11 (GNU/Linux)
 
-iD8DBQFO5R/qLFMCIV9q3ToRAl1xAKChcR28Axj7fAeUBWdneQxaszlTowCfTr61
-qAzR5FjKC6LLqvye74D0sos=
-=5xLu
+iD8DBQFPSW74LFMCIV9q3ToRAi2KAJwKsvUAUbPOowvSqk0EfEQKEKjkjQCgkv4B
+KtApZEP39w8GO5/fMebrxqk=
+=AB26
 -----END PGP SIGNATURE-----

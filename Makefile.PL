@@ -1,6 +1,6 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
-# Copyright 2007, 2008, 2009, 2010, 2011 Kevin Ryde
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -21,10 +21,8 @@ use 5.008;
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
-use lib 'inc';
-use MyMakeMakerExtras;
 
-MyMakeMakerExtras::WriteMakefile
+WriteMakefile
   (NAME         => 'Glib-Ex-ObjectBits',
    ABSTRACT     => 'Helpers for Glib objects.',
    VERSION_FROM => 'lib/Glib/Ex/SignalIds.pm',
@@ -42,7 +40,9 @@ MyMakeMakerExtras::WriteMakefile
 
    META_MERGE =>
    { resources =>
-     { homepage => 'http://user42.tuxfamily.org/glib-ex-objectbits/index.html' },
+     { homepage => 'http://user42.tuxfamily.org/glib-ex-objectbits/index.html',
+       license  => 'http://www.gnu.org/licenses/gpl.html',
+     },
      optional_features =>
      { maximum_tests =>
        { description => 'Have "make test" do as much as possible.',
@@ -54,15 +54,15 @@ MyMakeMakerExtras::WriteMakefile
      },
    },
 
-   MyMakeMakerExtras_Pod_Coverage =>
-   [ 'Glib::Ex::EnumBits',
-     'Glib::Ex::FreezeNotify',
-     'Glib::Ex::ObjectBits',
-     'Glib::Ex::SignalIds',
-     'Glib::Ex::SourceIds',
-     'Glib::Ex::TieProperties',
-
-     # Pod::Coverage 0.21 knows SCALAR()
-     # ,also_private=>[qr/^SCALAR$$/]
-   ],
+   # MyMakeMakerExtras_Pod_Coverage =>
+   # [ 'Glib::Ex::EnumBits',
+   #   'Glib::Ex::FreezeNotify',
+   #   'Glib::Ex::ObjectBits',
+   #   'Glib::Ex::SignalIds',
+   #   'Glib::Ex::SourceIds',
+   #   'Glib::Ex::TieProperties',
+   # 
+   #   # Pod::Coverage 0.21 knows SCALAR()
+   #   # ,also_private=>[qr/^SCALAR$$/]
+   # ],
   );

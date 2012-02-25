@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -23,7 +23,7 @@ use warnings;
 use Carp;
 use Glib;
 
-our $VERSION = 13;
+our $VERSION = 14;
 
 use constant DEBUG => 0;
 
@@ -150,9 +150,9 @@ C<Glib::Ex::TieProperties> accesses properties of a given C<Glib::Object>
 through a tied hash.  The keys are the property names and fetching and
 storing values operates on the property values.
 
-If you're just getting and setting properties then the Object C<get> and
-C<set> methods are enough.  But one good use for a tie is to apply C<local>
-settings within a block, to be undone by a C<set> back to their previous
+If you're just getting and setting properties then the Object C<get()> and
+C<set()> methods are enough.  But a good use for a tie is to apply C<local>
+settings within a block, to be undone by a C<set()> back to their previous
 values no matter how the block is left (C<goto>, C<return>, C<die>, etc).
 
     {
@@ -161,8 +161,8 @@ values no matter how the block is left (C<goto>, C<return>, C<die>, etc).
       do_page_up();
     }
 
-With C<new> to create a tied anonymous hashref a single long C<local>
-expression is possible
+With C<new()> to create a tied hashref a single long C<local> expression is
+possible
 
     # usually allow-shrink is not a good idea, have it temporarily
     local Glib::Ex::TieProperties->new($toplevel)->{'allow-shrink'} = 1;
@@ -179,24 +179,24 @@ statement.
     }
 
 Like most C<tie> things, TieProperties is better in concept than actuality.
-There's relatively few object properties wanting block-scoped changes, and
+There's relatively few object properties needing block-scoped changes, and
 things like getting all property names or values must generally pay
-attention to whether properties are read-only, write-only, etc, so a naive
+attention to whether properties are read-only, write-only, etc, so an
 C<each()> etc iteration is rarely much good.
 
 =head2 Details
 
-The property names as keys are anything accepted by C<get_property>,
-C<find_property>, etc.  This means underscores "_" can be used in place of
+The property name keys are anything accepted by C<get_property()>,
+C<find_property()>, etc.  This means underscores "_" can be used in place of
 dashes "-".  For example C<border_width> is an alias for C<border-width>.
 
 The C<keys> and C<each> operations return just the dashed names.  Currently
-they return properties in the same order as C<< $obj->list_properties >>
+they return properties in the same order as C<< $obj->list_properties() >>
 gives, but don't depend on that.
 
 Getting a non-existent property name returns C<undef>, the same as a
 non-existent entry in an ordinary Perl hash.  C<exists> tests a key with
-C<find_property>.
+C<find_property()>.
 
 If a property exists but is not readable then fetching returns C<undef>.  An
 error in that case would also be possible, but that would make it impossible
@@ -205,11 +205,11 @@ Storing to a non-existent property throws an error, a bit like a restricted
 hash (see L<Hash::Util>).  Storing to a read-only property likewise throws
 an error.
 
-For Perl 5.8.3 and up C<scalar()> is arranged to give a count like "17/17"
-when not empty, similar to a real hash.  This might help code expecting a
-slashed form, not just a boolean.  The counts pretend the hashing is
-perfect, but don't depend on that since perhaps in the future some more
-realistic report might be possible.
+For Perl 5.8.3 and up C<scalar()> gives a bucket count like "17/17" when not
+empty, similar to a real hash.  This might help code expecting a slashed
+count, not just a boolean.  The counts pretend the hashing is perfect, but
+don't depend on that since perhaps in the future some more realistic report
+might be possible.
 
 =head1 FUNCTIONS
 
@@ -227,7 +227,7 @@ Optional key/value pairs in the C<tie> set the following options
 
 =over 4
 
-=item weak (boolean, default false)
+=item C<weak =E<gt> boolean>, default false
 
 Hold only a weak reference to C<$object>.
 
@@ -255,7 +255,7 @@ C<$object>.  This is the same as
 
 The difference between a hash and a hashref is normally just a matter of
 which style you prefer.  Both can be created with one line of code (the
-C<my> worked into the C<tie> call for the plain hash).
+C<my> worked into the C<tie> call of the plain hash).
 
 =item C<< Glib::Ex::TieProperties->in_object ($object) >>
 
@@ -272,7 +272,7 @@ in addition
 
 =over 4
 
-=item field
+=item C<field =E<gt> $str>, default "property"
 
 Set the field name within C<$object> for the tied hash.  The default
 "property" is designed to be readable and not too likely to clash with other
@@ -285,19 +285,19 @@ things, but you can control it with the C<field> parameter,
 =back
 
 The C<weak> parameter described above is always set on a tied hash
-established by C<in_object> so it doesn't create a circular reference which
+established by C<in_object()> so that it's not a circular reference which
 would keep C<$object> alive forever.
 
 =back
 
 =head1 TIED OBJECT FUNCTIONS
 
-The tie object associated with the hash, as returned by the C<tie> or
+The tie object associated with the hash, which is returned by the C<tie> or
 obtained later with C<tied>, has the following methods.
 
 =over 4
 
-=item C<< $tobj->object >>
+=item C<< $tobj->object() >>
 
 Return the underlying object (C<Glib::Object> object) being accessed by
 C<$tobj>.
@@ -320,12 +320,12 @@ Or getting the C<$tobj> later with C<tied>,
 
 =head1 OTHER WAYS TO DO IT
 
-The C<Glib> module C<< $object->tie_properties >> feature does a very
+The C<Glib> module C<< $object->tie_properties() >> feature does a very
 similar thing.  But it works by populating C<$object> with individual tied
 field objects for the properties.  C<Glib::Ex::TieProperties> is separate
 from the object and may use a bit less memory since it's one object instead
-of many.  Separate however means an extra variable, or an extra indirection
-for the C<in_object> style above.
+of many.  But separate however means an extra variable, or an extra
+indirection for the C<in_object()> style above.
 
 =head1 SEE ALSO
 
@@ -337,7 +337,7 @@ L<http://user42.tuxfamily.org/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 
-Copyright 2009, 2010, 2011 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012 Kevin Ryde
 
 Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by the

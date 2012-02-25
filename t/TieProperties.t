@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010, 2011 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -84,7 +84,7 @@ my %want_props = ('myprop-one' => 1,
 
 my $gobject_has_properties = defined ((Glib::Object->list_properties)[0]);
 
-my $want_version = 13;
+my $want_version = 14;
 {
   is ($Glib::Ex::TieProperties::VERSION, $want_version,
       'VERSION variable');
@@ -122,8 +122,12 @@ diag "using tie()";
   # tied()
   is (tied(%h), $tobj, 'tied()');
 
-  # scalar()
-  ok (scalar %h, 'scalar() true');
+  # scalar(), SCALAR method new in 5.8.3
+ SKIP: {
+    $] >= 5.008003
+      or skip "SCALAR method only in 5.8.3 up";
+    ok (scalar(%h), 'scalar() true, 1 or more properties exist');
+  }
 
   # exists()
   ok (exists $h{'myprop-one'},
@@ -193,6 +197,7 @@ diag "using tie() with no properties";
   my $tobj = tie %h, 'Glib::Ex::TieProperties', $obj;
 
   # scalar()
+  # 5.8.2 and earlier without SCALAR method also give false for empty %h
   ok ($gobject_has_properties || ! scalar %h,
       "scalar() false, if GObject doesn't have properties");
 }

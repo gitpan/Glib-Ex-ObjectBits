@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -21,7 +21,7 @@ use strict;
 use warnings;
 use Scalar::Util;
 
-our $VERSION = 13;
+our $VERSION = 14;
 
 sub new {
   my $class = shift;
@@ -54,7 +54,7 @@ sub DESTROY {
 1;
 __END__
 
-=for stopwords Glib-Ex-ObjectBits FreezeNotify AtExit destructor Ryde
+=for stopwords Glib-Ex-ObjectBits FreezeNotify AtExit destructor Ryde ReleaseAction
 
 =head1 NAME
 
@@ -173,7 +173,7 @@ L<http://user42.tuxfamily.org/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 
-Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by the
