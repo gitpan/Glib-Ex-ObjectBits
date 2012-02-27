@@ -27,7 +27,7 @@ our @EXPORT_OK = qw(accumulator_first
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 14;
+our $VERSION = 15;
 
 sub accumulator_first {
   my ($hint, $acc, $ret) = @_;

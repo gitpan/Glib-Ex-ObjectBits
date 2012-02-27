@@ -84,7 +84,7 @@ my %want_props = ('myprop-one' => 1,
 
 my $gobject_has_properties = defined ((Glib::Object->list_properties)[0]);
 
-my $want_version = 14;
+my $want_version = 15;
 {
   is ($Glib::Ex::TieProperties::VERSION, $want_version,
       'VERSION variable');
@@ -125,7 +125,7 @@ diag "using tie()";
   # scalar(), SCALAR method new in 5.8.3
  SKIP: {
     $] >= 5.008003
-      or skip "SCALAR method only in 5.8.3 up";
+      or skip "SCALAR method only in 5.8.3 up", 1;
     ok (scalar(%h), 'scalar() true, 1 or more properties exist');
   }
 

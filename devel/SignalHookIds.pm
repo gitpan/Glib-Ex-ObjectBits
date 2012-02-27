@@ -23,7 +23,7 @@ use Carp;
 use Glib;
 use Scalar::Util;
 
-our $VERSION = 14;
+our $VERSION = 15;
 
 sub new {
   my ($class, $object, @ids) = @_;

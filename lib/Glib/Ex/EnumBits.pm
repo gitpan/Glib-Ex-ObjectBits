@@ -30,7 +30,7 @@ our @EXPORT_OK = qw(to_display
                     to_display_default
                     to_description);
 
-our $VERSION = 14;
+our $VERSION = 15;
 
 sub to_display {
   my ($enum_class, $nick) = @_;
