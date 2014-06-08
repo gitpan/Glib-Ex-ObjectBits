@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2014 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -28,7 +28,7 @@ use Exporter;
 our @ISA = ('Exporter');
 our @EXPORT_OK = qw(set_property_maybe);
 
-our $VERSION = 15;
+our $VERSION = 16;
 
 sub set_property_maybe {
   my $object = shift;
@@ -70,7 +70,7 @@ Glib::Ex::ObjectBits -- misc Glib object helpers
 
 Set properties on C<$obj> if they exist.  Each C<$pname> is a property name
 (a string) and those which exist on C<$obj> are set to their C<$value> with
-C<< $obj->set_property >>.
+C<< $obj->set_property() >>.
 
 This is a handy way to apply properties which might only exist in a new
 enough version of a library.  For example C<Gtk2::Widget> has a
@@ -83,9 +83,9 @@ Things like this which are purely visual and don't affect actual operation
 are good for a set-maybe.  Important things might want some sort of proper
 fallback.
 
-Properties which do always exist can be included in C<set_property_maybe>,
+Properties which do always exist can be included in C<set_property_maybe()>,
 if a single call looks better.  But be careful not to mis-spell a property
-name, since C<set_property_maybe> of course has no way to identify that.
+name, since C<set_property_maybe()> of course has no way to identify that.
 
 =back
 
@@ -98,7 +98,7 @@ C<Exporter> style,
     # "tearoff-title" new in Gtk 2.10
     set_property_maybe ($combobox, tearoff_title => 'My Menu');
 
-Importing C<set_property_maybe> is good if making many such settings.  The
+Importing C<set_property_maybe()> is good if making many such settings.  The
 name is tolerably distinctive.
 
 There's no C<:all> tag since this module is meant as a grab-bag of functions
@@ -121,7 +121,7 @@ L<http://user42.tuxfamily.org/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2014 Kevin Ryde
 
 Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by the

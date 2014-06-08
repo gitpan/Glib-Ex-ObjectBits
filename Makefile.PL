@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2014 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -26,8 +26,8 @@ WriteMakefile
   (NAME         => 'Glib-Ex-ObjectBits',
    ABSTRACT     => 'Helpers for Glib objects.',
    VERSION_FROM => 'lib/Glib/Ex/SignalIds.pm',
-   AUTHOR       => 'Kevin Ryde <user42@zip.com.au>',
-   LICENSE      => 'gpl',
+   AUTHOR       => 'Kevin Ryde <user42_kevin@yahoo.com.au>',
+   LICENSE      => 'gpl_3',
    SIGN         => 1,
    MIN_PERL_VERSION => '5.008',
 
@@ -36,6 +36,8 @@ WriteMakefile
                     'Glib' => 0,
                     # used so name it explicitly
                     'Glib::Object::Subclass' => 0,
+
+                    'Devel::GlobalDestruction' => 0,
                    },
 
    META_MERGE =>
@@ -43,6 +45,8 @@ WriteMakefile
      { homepage => 'http://user42.tuxfamily.org/glib-ex-objectbits/index.html',
        license  => 'http://www.gnu.org/licenses/gpl.html',
      },
+     no_index => { directory=>['devel'] },
+
      optional_features =>
      { maximum_tests =>
        { description => 'Have "make test" do as much as possible.',

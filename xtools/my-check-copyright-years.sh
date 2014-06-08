@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# my-check-copyright-years.sh -- run cpants_lint kwalitee checker
+# my-check-copyright-years.sh -- check copyright years in dist
 
-# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # my-check-copyright-years.sh is shared by several distributions.
 #
@@ -25,7 +25,9 @@ set -e
 # find files in the dist with mod times this year, but without this year in
 # the copyright line
 
-DISTVNAME=`sed -n 's/^DISTVNAME = \(.*\)/\1/p' Makefile`
+if test -z "$DISTVNAME"; then
+  DISTVNAME=`sed -n 's/^DISTVNAME = \(.*\)/\1/p' Makefile`
+fi
 if test -z "$DISTVNAME"; then
   echo "DISTVNAME not found"
   exit 1
@@ -50,7 +52,7 @@ do
     | ppport.h \
     | debian/changelog | debian/compat | debian/doc-base \
     | debian/patches/*.diff | debian/source/format \
-    | COPYING | MANIFEST* | SIGNATURE | META.yml \
+    | COPYING | MANIFEST* | SIGNATURE | META.yml | META.json \
     | version.texi | */version.texi \
     | *utf16* | examples/rs''s2lea''fnode.conf \
     | */MathI''mage/ln2.gz | */MathI''mage/pi.gz \

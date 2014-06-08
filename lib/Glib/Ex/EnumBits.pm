@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2014 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -30,7 +30,7 @@ our @EXPORT_OK = qw(to_display
                     to_display_default
                     to_description);
 
-our $VERSION = 15;
+our $VERSION = 16;
 
 sub to_display {
   my ($enum_class, $nick) = @_;
@@ -59,8 +59,18 @@ sub to_display_default {
   ### EnumBits to_display_default(): $nick
 
   if (@_ != 2) {
+    # it's easy to forget the $enum_class parameter, guard against that ...
     croak 'EnumBits to_display_default() wrong number of arguments';
   }
+  
+  if ($nick =~ /^([-_ ]+)$/) {
+    # consists entirely of separators, eg "--"
+    # preserve something non-empty
+    $nick =~ s/^\s+//; # leading whitespace
+    $nick =~ s/\s+$//; # trailing whitespace
+    return $nick;
+  }
+
   my $str = join (' ',
                   map {ucfirst}
                   split(/[-_ ]+
@@ -146,11 +156,12 @@ Return a string to display C<$nick> from C<$enum_class>.  This is meant to
 be suitable for a menu, label, etc.
 
 C<$enum_class> is a class name such as C<"Glib::UserDirectory">.  A class
-method and hash are consulted, otherwise C<to_display_default> below is
+method and hash are consulted, otherwise C<to_display_default()> below is
 used.  That default is often enough.
 
 If C<$enum_class> has a C<< $enum_class->EnumBits_to_display ($nick) >>
-method then it's called and a non-C<undef> used.  For example,
+method then it's called and if the values is not C<undef> then it's used.
+For example,
 
     Glib::Type->register_enum ('My::Things',
                                'foo', 'bar-ski', 'quux');
@@ -159,17 +170,17 @@ method then it's called and a non-C<undef> used.  For example,
       return "some thing $nick";
     }
 
-Or if the class has a C<%EnumBits_to_display> variable that it's checked and
-a non-C<undef> there used,
+Or if the class has a C<%EnumBits_to_display> package variable then it's
+checked and if the hash value is not C<undef> then it's used,
 
     Glib::Type->register_enum ('My::Things',
                                'foo', 'bar-ski', 'quux');
     %My::Things::EnumBits_to_display = ('foo'     => 'Food',
                                         'bar-ski' => 'Barrage');
 
-Setting that may provoke a "used only once" warning (see L<perldiag>) in a
-program, though normally not in a module.  Use C<no warnings 'once'>, or
-C<package> and C<our>,
+In a program (rather than a module) setting the variable this way might
+provoke a "used only once" warning (see L<perldiag>).  Use C<no warnings
+'once'>, or C<package> and C<our>,
 
     {
       package My::Things;
@@ -177,20 +188,21 @@ C<package> and C<our>,
       our %EnumBits_to_display = ('foo' => 'Oof');
     }
 
-C<package> style like this can be handy if setting up a C<to_description>
+C<package> style like this can be handy if setting up a C<to_description()>
 below too.
 
 =item C<< $str = Glib::Ex::EnumBits::to_display_default ($enum_class, $nick) >>
 
 Return a string form for value C<$nick> from C<$enum_class>.  The nick is
-split into words and numbers, and C<ucfirst> applied to each word.  So for
+split into words and numbers and C<ucfirst()> applied to each word.  So for
 example
 
     "some-val1" -> "Some Val 1"
 
 The C<$enum_class> parameter is not currently used, but it's the same as
-C<to_display> above and might be used in the future for better default
-mangling.  C<$enum_class> can be C<undef> to crunch for an unknown enum.
+C<to_display()> above and might be used in the future for better default
+mangling.  C<$enum_class> can be C<undef> to crunch a C<$nick> from an
+unknown enum.
 
 =back
 
@@ -230,7 +242,7 @@ Nothing is exported by default, but the functions can be requested in usual
 C<Exporter> style,
 
     use Glib::Ex::EnumBits 'to_display_default';
-    print to_display_default ($class, $nick);
+    print to_display_default($class, $nick), "\n";
 
 There's no C<:all> tag since this module is meant as a grab-bag of functions
 and to import as-yet unknown things would be asking for name clashes.
@@ -247,7 +259,7 @@ L<http://user42.tuxfamily.org/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2014 Kevin Ryde
 
 Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by the

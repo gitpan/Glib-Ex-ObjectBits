@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2014 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -27,7 +27,7 @@ our @EXPORT_OK = qw(accumulator_first
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 15;
+our $VERSION = 16;
 
 sub accumulator_first {
   my ($hint, $acc, $ret) = @_;
@@ -75,7 +75,7 @@ Glib::Ex::SignalBits -- miscellaneous Glib signal helpers
 
 The following functions are designed for use as the "accumulator" in a
 signal created by C<Glib::Object::Subclass> or
-C<< Glib::Type->register_object >>.  The functions are trivial, but giving
+C<< Glib::Type->register_object() >>.  The functions are trivial, but giving
 them names gets the right sense and order for the return values.
 
 =over 4
@@ -107,8 +107,8 @@ non-C<undef> C<Glib::Scalar>.
       };
 
 Don't forget to C<use Glib::Ex::SignalBits> because a non-existent function
-in a signal accumulator will cause an C<abort> from Perl-Glib (as of version
-1.220).
+in a signal accumulator will cause an C<abort()> from Perl-Glib (as of
+version 1.220).
 
 =head1 EXPORTS
 
@@ -134,7 +134,7 @@ L<http://user42.tuxfamily.org/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 
-Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2014 Kevin Ryde
 
 Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by the

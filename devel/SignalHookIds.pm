@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2011, 2012 Kevin Ryde
+# Copyright 2008, 2009, 2011, 2012, 2014 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -22,8 +22,9 @@ use warnings;
 use Carp;
 use Glib;
 use Scalar::Util;
+use Devel::GlobalDestruction 'in_global_destruction';
 
-our $VERSION = 15;
+our $VERSION = 16;
 
 sub new {
   my ($class, $object, @ids) = @_;
@@ -45,7 +46,9 @@ sub add {
 
 sub DESTROY {
   my ($self) = @_;
-  $self->disconnect;
+  unless (in_global_destruction()) {
+    $self->disconnect;
+  }
 }
 
 sub object {
@@ -186,7 +189,7 @@ L<http://user42.tuxfamily.org/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 
-Copyright 2008, 2009, 2011, 2012 Kevin Ryde
+Copyright 2008, 2009, 2011, 2012, 2014 Kevin Ryde
 
 Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by the

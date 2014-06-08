@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2014 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -33,6 +33,19 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 require Glib;
 MyTestHelpers::glib_gtk_versions();
 
+# suppresss for example
+#   GLib-CRITICAL **: Source ID 3 was not found when attempting to remove it at t/SourceIds.t line 80.
+# Is there another way to enquire whether a source ID exists?
+#
+Glib::Log->set_handler ('GLib', ['critical'], \&my_log_func);
+sub my_log_func {
+  my ($log_domain, $log_levels, $message) = @_;
+  if ($message =~ /source .* not found/i) {
+    return;
+  }
+  warn $message;
+}
+
 sub do_idle {
   diag "idle";
   return 0; # Glib::SOURCE_REMOVE
@@ -40,7 +53,7 @@ sub do_idle {
 
 # version number
 {
-  my $want_version = 15;
+  my $want_version = 16;
   is ($Glib::Ex::SourceIds::VERSION, $want_version, 'VERSION variable');
   is (Glib::Ex::SourceIds->VERSION,  $want_version, 'VERSION class method');
   ok (eval { Glib::Ex::SourceIds->VERSION($want_version); 1 },

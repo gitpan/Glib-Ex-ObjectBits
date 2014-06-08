@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2014 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -23,7 +23,7 @@ use warnings;
 use Carp;
 use Glib;
 
-our $VERSION = 15;
+our $VERSION = 16;
 
 use constant DEBUG => 0;
 
@@ -182,7 +182,7 @@ Like most C<tie> things, TieProperties is better in concept than actuality.
 There's relatively few object properties needing block-scoped changes, and
 things like getting all property names or values must generally pay
 attention to whether properties are read-only, write-only, etc, so an
-C<each()> etc iteration is rarely much good.
+C<each()> etc iteration is rarely good.
 
 =head2 Details
 
@@ -195,7 +195,7 @@ they return properties in the same order as C<< $obj->list_properties() >>
 gives, but don't depend on that.
 
 Getting a non-existent property name returns C<undef>, the same as a
-non-existent entry in an ordinary Perl hash.  C<exists> tests a key with
+non-existent entry in an ordinary Perl hash.  C<exists> tests for a key with
 C<find_property()>.
 
 If a property exists but is not readable then fetching returns C<undef>.  An
@@ -205,9 +205,9 @@ Storing to a non-existent property throws an error, a bit like a restricted
 hash (see L<Hash::Util>).  Storing to a read-only property likewise throws
 an error.
 
-For Perl 5.8.3 and up C<scalar()> gives a bucket count like "17/17" when not
+In Perl 5.8.3 and up C<scalar()> gives a bucket count like "17/17" when not
 empty, similar to a real hash.  This might help code expecting a slashed
-count, not just a boolean.  The counts pretend the hashing is perfect, but
+count, not just a boolean.  The return pretends the hashing is perfect, but
 don't depend on that since perhaps in the future some more realistic report
 might be possible.
 
@@ -220,8 +220,8 @@ might be possible.
 =item C<< tie %h, 'Glib::Ex::TieProperties', $object, key=>value,... >>
 
 Tie a hash C<%h> to C<$object> so that C<%h> accesses the properties of
-C<$object>.  The keys of C<%h> are property names, the values the settings
-in C<$object>.
+C<$object>.  The keys of C<%h> are property names, the values the property
+values in C<$object>.
 
 Optional key/value pairs in the C<tie> set the following options
 
@@ -293,7 +293,7 @@ would keep C<$object> alive forever.
 =head1 TIED OBJECT FUNCTIONS
 
 The tie object associated with the hash, which is returned by the C<tie> or
-obtained later with C<tied>, has the following methods.
+obtained later with C<tied()>, has the following methods.
 
 =over 4
 
@@ -307,7 +307,7 @@ C<$tobj>.
     ...
     print $tobj->object;  # the original $object
 
-Or getting the C<$tobj> later with C<tied>,
+Or getting the C<$tobj> later with C<tied()>,
 
     my %hash
     tie %hash, 'Gtk2::Ex::TiedListColumn', $object;
@@ -323,8 +323,8 @@ Or getting the C<$tobj> later with C<tied>,
 The C<Glib> module C<< $object->tie_properties() >> feature does a very
 similar thing.  But it works by populating C<$object> with individual tied
 field objects for the properties.  C<Glib::Ex::TieProperties> is separate
-from the object and may use a bit less memory since it's one object instead
-of many.  But separate however means an extra variable, or an extra
+from the object and may use a little less memory since it's one object
+instead of many.  But separate means an extra variable, or an extra
 indirection for the C<in_object()> style above.
 
 =head1 SEE ALSO
@@ -337,7 +337,7 @@ L<http://user42.tuxfamily.org/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 
-Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2014 Kevin Ryde
 
 Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by the

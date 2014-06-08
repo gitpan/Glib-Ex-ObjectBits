@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2014 Kevin Ryde
 
 # This file is part of Glib-Ex-ObjectBits.
 #
@@ -22,8 +22,9 @@ use warnings;
 use Carp;
 use Glib;
 use Scalar::Util;
+use Devel::GlobalDestruction 'in_global_destruction';
 
-our $VERSION = 15;
+our $VERSION = 16;
 
 sub new {
   my ($class, $object, @ids) = @_;
@@ -45,7 +46,9 @@ sub add {
 
 sub DESTROY {
   my ($self) = @_;
-  $self->disconnect;
+  unless (in_global_destruction()) {
+    $self->disconnect;
+  }
 }
 
 sub object {
@@ -100,19 +103,19 @@ C<Glib::Ex::SignalIds> holds a set of signal handler connection IDs
 (integers) and the object they're on.  When the SignalIds is destroyed it
 disconnects those IDs.
 
-This is designed to make life easier when putting connections on "external"
-objects which you should cleanup either in your own object destruction or
-when switching to a different target.
+This is designed as a reliable way to put connections on "external" objects
+which you should cleanup either in your own object destruction or when
+switching to a different target.
 
-The SignalIds data object itself is designed to be compact so that it could
-be used on a large number of objects.
+The SignalIds data object itself is compact so that it can be used on a
+large number of objects.
 
 =head2 Target Object Usage
 
 A typical use is connecting to signals on a target object which is in one of
 your properties.  For example a C<Gtk2::TreeModel> target in a viewer, or a
-C<Gtk2::Adjustment> for scrolling.  The C<SET_PROPERTY> in your new class
-might look like
+C<Gtk2::Adjustment> for scrolling.  The C<SET_PROPERTY> in a class might
+look like
 
     sub SET_PROPERTY {
       my ($self, $pspec, $newval) = @_;
@@ -136,11 +139,11 @@ C<model_ids> is discarded and thus disconnects the previous model.  In real
 code you won't want C<$self> in the signal user data, but something weakened
 to avoid a circular reference, the same as for all signal connections.
 
-The key to this kind of usage is that the target object might change and you
-want a convenient way to connect to the new and disconnect from the old.  If
-on the other hand a sub-object or sub-widget belongs exclusively to you,
-never changes, and is destroyed at the same time as your object, then
-there's no need for disconnection and you don't need a SignalIds.
+The key to this is that the target object might change and you want a
+convenient way to connect to the new and disconnect from the old.  If
+instead a sub-object or sub-widget belongs exclusively to you, never
+changes, and is destroyed at the same time as your object, then there's no
+need for disconnection and you don't need a SignalIds.
 
 =head2 Weakening
 
@@ -151,16 +154,29 @@ the target object itself without creating a circular reference.
 
 If the target object is destroyed then all its signals are disconnected.
 SignalIds knows no explicit disconnects are needed in that case.  SignalIds
-also knows some forms of weakening and Perl's "global destruction" phase can
-give slightly odd situations where the target object has disconnected its
-signals but Perl hasn't yet zapped references to the object.  For that
-reason SignalIds checks whether IDs are still connected before
-disconnecting, to avoid warnings from Glib.
+also knows some forms of weakening can give slightly odd situations where
+the target object has disconnected its signals but Perl hasn't yet zapped
+references to the object.  For that reason SignalIds checks whether IDs are
+still connected before disconnecting, to avoid warnings from Glib.
 
 Warnings for "already disconnected" during target object destruction tend to
 be a bit subtle.  You can end up with the Perl-level object hash still
 existing yet all signals on the object already disconnected.  SignalIds is a
 handy way to avoid trouble.
+
+=head2 Global Destruction
+
+During global destruction SignalIds doesn't disconnect any signals.  This
+avoids warnings like
+
+    (in cleanup) Foo=HASH(0x91e6ca0) is not a proper Glib::Object
+        (it doesn't contain the right magic)
+        at /usr/share/perl5/Glib/Ex/SignalIds.pm line 70 during global destruction.
+
+Objects are destroyed in an unspecified order during global destruction so
+it can happen that the target is already gone.  Perl is about to exit anyway
+so disconnecting handlers is not necessary.  (See L<perlobj/Global
+Destruction>.)
 
 =head1 FUNCTIONS
 
@@ -172,7 +188,7 @@ Create and return a SignalIds object holding the given C<$id> signal handler
 IDs (integers) which are connected on C<$object> (a C<Glib::Object>).
 
 SignalIds doesn't actually connect handlers.  You do that with
-C<signal_connect> etc in the usual ways and all the various possible
+C<signal_connect()> etc in the usual ways and all the various possible
 "before", "after", user data, detail, etc, then just pass the resulting ID
 to SignalIds to look after. Eg.
 
@@ -189,7 +205,7 @@ further connection made later on, or only conditionally.
     $sigids->add ($obj->signal_connect (foo => \&do_foo));
     $sigids->add ($obj->signal_connect (bar => \&do_bar));
 
-Adding IDs one by one is good if one of the C<signal_connect> calls might
+Adding IDs one by one is good if one of the C<signal_connect()> calls might
 error out.  Previous connections are safely in the C<$sigids> and will be
 cleaned up, whereas in a multiple-ID call some could leak on an error.  An
 error making a connection is unlikely, unless perhaps the signal name comes
@@ -228,7 +244,7 @@ L<http://user42.tuxfamily.org/glib-ex-objectbits/index.html>
 
 =head1 LICENSE
 
-Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012, 2014 Kevin Ryde
 
 Glib-Ex-ObjectBits is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by the
